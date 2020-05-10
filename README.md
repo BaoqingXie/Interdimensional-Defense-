@@ -1,2 +1,2 @@
 # RocketPatrol
-A Mode for RocketPatrol game
+Top-Down Shooter made by The Cooler Group
