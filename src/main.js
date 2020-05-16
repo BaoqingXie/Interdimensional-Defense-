@@ -22,7 +22,11 @@ let game = new Phaser.Game(config);
 
 //variable
 let keyW, keyA, keyS, keyD;
+
+let moveKeys;
 */
+
+
 
 var config = {
     type: Phaser.AUTO,
@@ -163,9 +167,13 @@ function create ()
         'left': Phaser.Input.Keyboard.KeyCodes.A,
         'right': Phaser.Input.Keyboard.KeyCodes.D
     });
+    console.log(this);
 
     // Enables movement of player with WASD keys
     this.input.keyboard.on('keydown_W', function (event) {
+
+        console.log('donw');
+        console.log(this);
         player.setAccelerationY(-800);
     });
     this.input.keyboard.on('keydown_S', function (event) {
@@ -180,8 +188,10 @@ function create ()
 
     // Stops player acceleration on uppress of WASD keys
     this.input.keyboard.on('keyup_W', function (event) {
-        if (moveKeys['down'].isUp)
+        if (moveKeys['down'].isUp){
+            console.log('up');
             player.setAccelerationY(0);
+        }
     });
     this.input.keyboard.on('keyup_S', function (event) {
         if (moveKeys['up'].isUp)
@@ -362,4 +372,5 @@ function update (time, delta)
 
     // Make enemy fire
     enemyFire(enemy, player, time, this);
+    
 }
