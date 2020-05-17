@@ -4,15 +4,16 @@ class Player extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame);
 
         scene.physics.world.enable(this);
+        this.body.setDrag(500,500);
+        this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
     }
 
-    update(scene) {
+    movement(scene) {
 
-        scene.input.keyboard.on('keydown_W', function() {
-            console.log('wdown');
-            console.log(this);
+        scene.input.keyboard.on('keydown_W', ()=> {
             this.body.setAccelerationY(-400);
+            console.log('1');
         });
         scene.input.keyboard.on('keydown_S', ()=> {
             this.body.setAccelerationY(400);
@@ -26,8 +27,8 @@ class Player extends Phaser.GameObjects.Sprite {
 
         scene.input.keyboard.on('keyup_W', ()=> {
             if (moveKeys['down'].isUp){
-                console.log('wup');
-            this.body.setAccelerationY(0);
+            console.log('1');
+            this.body.setAccelerationY(0);   
             }
         });
         scene.input.keyboard.on('keyup_S', ()=> {
@@ -44,6 +45,4 @@ class Player extends Phaser.GameObjects.Sprite {
         });
 
     }
-
-    
 }

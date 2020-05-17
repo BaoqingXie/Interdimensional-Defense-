@@ -6,18 +6,17 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
+        this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('background', './assets/DimensionEarth.png');
     }
 
     create() {
-        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1.25, 1.25).setOrigin(0, 0);
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
 
-        this.p1player = new Player(this, 400, 300, 'Player');
+        p1Bullets =  this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 
-        //keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        //keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        //keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        //keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -26,20 +25,53 @@ class Play extends Phaser.Scene {
             'right': Phaser.Input.Keyboard.KeyCodes.D
         });
 
-        this.cameras.main.zoom = 0.8;
-        this.cameras.main.startFollow(this.p1player);
+        this.cameras.main.zoom = 1;
+        this.cameras.main.startFollow(p1player);
 
-        //this.p1player.setVelocityX(-10);
-        this.input.keyboard.on('keydown', ()=> {
-            console.log('G');
+        p1player.movement(this);
+
+        this.input.on('pointerdown', function (pointer, time, lastFired) {
+            if (p1player.active === false)
+                return;
+    
+            // Get bullet from bullets group
+            var bullet = p1Bullets.get().setActive(true).setVisible(true);
+    
+            if (bullet)
+            {
+                bullet.Fire(p1player, r1reticle);
+                //this.physics.add.collider(enemy, bullet, enemyHitCallback);
+            }
+        }, this);
+
+        game.canvas.addEventListener('mousedown', function () {
+            game.input.mouse.requestPointerLock();
         });
 
+        // Exit pointer lock when Q or escape (by default) is pressed.
+        this.input.keyboard.on('keydown_Q', function (event) {
+            if (game.input.mouse.locked)
+                game.input.mouse.releasePointerLock();
+        }, 0, this);
+
+        this.input.on('pointermove', function (pointer) {
+            if (this.input.mouse.locked) {
+                r1reticle.movement(p1player, pointer.movementX, pointer.movementY);
+            }
+        }, this);
 
     }
 
     update() {
-        this.p1player.update(this);
-        this.constrainVelocity(this.p1player, 500);
+        p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
+        //this.adjustCamera(p1player, r1reticle);
+
+        // Make reticle move with player
+        r1reticle.body.velocity.x = p1player.body.velocity.x;
+        r1reticle.body.velocity.y = p1player.body.velocity.y;
+
+        this.constrainVelocity(p1player, 500);
+        this.constrainReticle(r1reticle, 550, p1player);
 
     }
 
@@ -59,6 +91,50 @@ class Play extends Phaser.Scene {
             sprite.body.velocity.x = vx;
             sprite.body.velocity.y = vy;
         }
+    }
+
+    constrainReticle(reticle, radius, player) {
+
+        // Only works when camera follows player
+        var distX = reticle.x - player.x;
+        var distY = reticle.y - player.y;
+
+        // Ensures reticle cannot be moved offscreen
+        if (distX > gamewitdh) {
+            console.log('fix');
+            reticle.x = player.x + gamewitdh;
+        }
+        else if (distX < -gamewitdh) {
+            console.log('fix');
+            reticle.x = player.x - gamewitdh;
+        }
+
+        if (distY > gameheight)
+            reticle.y = player.y + gameheight;
+        else if (distY < -gameheight)
+            reticle.y = player.y - gameheight;
+
+        // Ensures reticle cannot be moved further than dist(radius) from player
+        var distBetween = Phaser.Math.Distance.Between(player.x, player.y, reticle.x, reticle.y);
+        if (distBetween > radius) {
+            // Place reticle on perimeter of circle on line intersecting player & reticle
+            var scale = distBetween / radius;
+
+            console.log('fix')
+
+            reticle.x = player.x + (reticle.x - player.x) / scale;
+            reticle.y = player.y + (reticle.y - player.y) / scale;
+        }
+
+    }
+
+    adjustCamera(sprite1, sprite2) {
+        var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
+        var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
+        console.log(avgX);
+        console.log(avgY);
+        this.cameras.main.scrollX = avgX;
+        this.cameras.main.scrollY = avgY;
     }
 
 }
