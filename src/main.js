@@ -1,9 +1,9 @@
-let gamewitdh = 640;
+let gamewidth = 640;
 let gameheight = 480;
 
 let config = {
     type: Phaser.AUTO,
-    width: gamewitdh,
+    width: gamewidth,
     height: gameheight,
 
     physics: {
@@ -29,6 +29,13 @@ let r1reticle;
 let p1Bullets;
 
 let moveKeys;
+let key1;
+let key2;
+let key3;
 
+let bulletSpeed = 1;
+
+let shiftcooldown = 300;
+let drag = 1000;
 let maxSpeed = 250;
-let acceleration = 2000;
+let acceleration = 2400;
