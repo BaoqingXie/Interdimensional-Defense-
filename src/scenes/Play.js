@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.badguy = new Enemy(this, gamewitdh / 2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
+        this.badguy = new Enemy(this, gamewidth / 2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
