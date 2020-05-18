@@ -7,17 +7,27 @@ class Play extends Phaser.Scene {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
-        this.load.image('background1', './assets/Backgrounds/DimensionEarth.png');
-        this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
+        this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
+        //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
+        this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+        this.load.audio('Pistol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
     }
 
     create() {
-        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
+        this.dimension = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 
-        p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
-        r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+
+
+        key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -35,7 +45,7 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('Postol_shooting', { volume: 0.25 });
+            this.sound.play('Pistol_shooting', { volume: 0.25 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
@@ -74,6 +84,11 @@ class Play extends Phaser.Scene {
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
+        
+        if(this.dimension.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+            this.sound.play('dimension_shift', { volume: 0.45 });
+            this.dimension.setTexture(this.dimension.getfilename()); //updates bg texture to current dimension
+        }
     }
 
     constrainVelocity(sprite, maxVelocity) {
@@ -101,13 +116,13 @@ class Play extends Phaser.Scene {
         var distY = reticle.y - player.y;
 
         // Ensures reticle cannot be moved offscreen
-        if (distX > gamewitdh) {
+        if (distX > gamewidth) {
             console.log('fix');
-            reticle.x = player.x + gamewitdh;
+            reticle.x = player.x + gamewidth;
         }
-        else if (distX < -gamewitdh) {
+        else if (distX < -gamewidth) {
             console.log('fix');
-            reticle.x = player.x - gamewitdh;
+            reticle.x = player.x - gamewidth;
         }
 
         if (distY > gameheight)
