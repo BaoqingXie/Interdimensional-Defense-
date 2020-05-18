@@ -20,7 +20,7 @@ class Play extends Phaser.Scene {
         p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
 
-        this.badguy = new Enemy(this, gamewitdh/2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
+        this.badguy = new Enemy(this, gamewitdh / 2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -44,7 +44,7 @@ class Play extends Phaser.Scene {
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle);
-                //this.physics.add.collider(enemy, bullet, enemyHitCallback);
+                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -74,24 +74,40 @@ class Play extends Phaser.Scene {
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
-        
+
         var distx = Math.abs(this.badguy.x - p1player.x);
         var disty = Math.abs(this.badguy.y - p1player.y);
 
-        if(this.badguy.x > p1player.x)
-            this.badguy.x -= 1 + distx/25;
-        else if(this.badguy.x < p1player.x)
-            this.badguy.x += 1 + distx/25;
-        
-        if(this.badguy.y > p1player.y)
-            this.badguy.y -= 1 + disty/25;
-        else if(this.badguy.y < p1player.y)
-            this.badguy.y += 1 + disty/25;
-        
+        if (this.badguy.x > p1player.x)
+            this.badguy.x -= 1 + distx / 1000;
+        else if (this.badguy.x < p1player.x)
+            this.badguy.x += 1 + distx / 1000;
+
+        if (this.badguy.y > p1player.y)
+            this.badguy.y -= 1 + disty / 1000;
+        else if (this.badguy.y < p1player.y)
+            this.badguy.y += 1 + disty / 1000;
+
         //if(this.badguy.x)
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
+    }
+
+    enemyHitCallback(enemyHit, bulletHit) {
+        // Reduce hp of enemy
+        if (bulletHit.active === true && enemyHit.active === true) {
+            enemyHit.hp = enemyHit.hp - 1;
+            console.log("Enemy hp: ", enemyHit.hp);
+
+            // Kill enemy if hp <= 0
+            if (enemyHit.hp <= 0) {
+                enemyHit.setActive(false).setVisible(false);
+            }
+
+            // Destroy bullet
+            bulletHit.setActive(false).setVisible(false);
+        }
     }
 
     constrainVelocity(sprite, maxVelocity) {
