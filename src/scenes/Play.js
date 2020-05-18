@@ -73,31 +73,24 @@ class Play extends Phaser.Scene {
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
-
-        this.constrainVelocity(p1player, 500);
-        this.constrainReticle(r1reticle, 550, p1player);
         
-        //var dist = Math.sqrt(Math.pow(this.badguy.x - p1player.x, 2) + Math.pow(this.badguy.y - p1player.y, 2));
-        //var distx = Math.pow(this.badguy.x - p1player.x, 2);
-        //var disty = Math.pow(this.badguy.y - p1player.y, 2);
         var distx = Math.abs(this.badguy.x - p1player.x);
         var disty = Math.abs(this.badguy.y - p1player.y);
 
         if(this.badguy.x > p1player.x)
-            //this.badguy.x -= (1 + distx/10);
             this.badguy.x -= 1 + distx/25;
         else if(this.badguy.x < p1player.x)
-            //this.badguy.x += (1 + distx/10);
             this.badguy.x += 1 + distx/25;
         
         if(this.badguy.y > p1player.y)
-            //this.badguy.y -= (1 + disty/10);
             this.badguy.y -= 1 + disty/25;
         else if(this.badguy.y < p1player.y)
-            //this.badguy.y += (1 + disty/10);
             this.badguy.y += 1 + disty/25;
         
         //if(this.badguy.x)
+        this.constrainVelocity(p1player, maxSpeed);
+        this.constrainReticle(r1reticle, 600, p1player);
+
     }
 
     constrainVelocity(sprite, maxVelocity) {
@@ -161,5 +154,4 @@ class Play extends Phaser.Scene {
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
-
 }
