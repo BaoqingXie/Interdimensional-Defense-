@@ -19,6 +19,8 @@ class Play extends Phaser.Scene {
         p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
 
+        this.badguy = new Enemy(this, gamewitdh/2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
+
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -66,6 +68,7 @@ class Play extends Phaser.Scene {
     update() {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
+        this.badguy.rotation = Phaser.Math.Angle.Between(this.badguy.x, this.badguy.y, p1player.x, p1player.y);
 
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
@@ -73,7 +76,28 @@ class Play extends Phaser.Scene {
 
         this.constrainVelocity(p1player, 500);
         this.constrainReticle(r1reticle, 550, p1player);
+        
+        //var dist = Math.sqrt(Math.pow(this.badguy.x - p1player.x, 2) + Math.pow(this.badguy.y - p1player.y, 2));
+        //var distx = Math.pow(this.badguy.x - p1player.x, 2);
+        //var disty = Math.pow(this.badguy.y - p1player.y, 2);
+        var distx = Math.abs(this.badguy.x - p1player.x);
+        var disty = Math.abs(this.badguy.y - p1player.y);
 
+        if(this.badguy.x > p1player.x)
+            //this.badguy.x -= (1 + distx/10);
+            this.badguy.x -= 1 + distx/25;
+        else if(this.badguy.x < p1player.x)
+            //this.badguy.x += (1 + distx/10);
+            this.badguy.x += 1 + distx/25;
+        
+        if(this.badguy.y > p1player.y)
+            //this.badguy.y -= (1 + disty/10);
+            this.badguy.y -= 1 + disty/25;
+        else if(this.badguy.y < p1player.y)
+            //this.badguy.y += (1 + disty/10);
+            this.badguy.y += 1 + disty/25;
+        
+        //if(this.badguy.x)
     }
 
     constrainVelocity(sprite, maxVelocity) {
