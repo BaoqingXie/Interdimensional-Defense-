@@ -4,137 +4,138 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-        // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', { frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9 });
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
+        this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
+        this.load.image('reticle', './assets/reticle.jpg');
+        this.load.image('background', './assets/DimensionEarth.png');
+        this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
     }
 
     create() {
-        //place thile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
 
-        //white rectangle borders
-        this.add.rectangle(5, 5, 630, 32, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(5, 443, 630, 32, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(5, 5, 32, 445, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(603, 5, 32, 445, 0xFFFFFF).setOrigin(0, 0);
+        p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 
-        //UI background
-        this.add.rectangle(37, 42, 566, 64, 0x00FF00).setOrigin(0, 0);
+        p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
 
-        //add rocket(p1)
-        this.p1Rocket = new Rocket(this, game.config.width / 2, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
-
-        //add Spaceships(x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceship', 0, 20).setOrigin(0, 0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0, 0);
-
-        //define keyborad keys
-        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-
-        // animation config
-        this.anims.create({
-            key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0 }),
-            frameRate: 30
+        moveKeys = this.input.keyboard.addKeys({
+            'up': Phaser.Input.Keyboard.KeyCodes.W,
+            'down': Phaser.Input.Keyboard.KeyCodes.S,
+            'left': Phaser.Input.Keyboard.KeyCodes.A,
+            'right': Phaser.Input.Keyboard.KeyCodes.D
         });
 
-        // score
-        this.p1Score = 0;
+        this.cameras.main.zoom = 1;
+        this.cameras.main.startFollow(p1player);
 
-        // score display
-        let scoreConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 100
-        }
-        this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
+        p1player.movement(this);
 
-        // game over flag
-        this.gameOver = false;
+        this.input.on('pointerdown', function (pointer, time, lastFired) {
+            if (p1player.active === false)
+                return;
 
-        // 60-second play clock
-        scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(60000, () => {
-            this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width / 2, game.config.height / 2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-        }, null, this);
+            this.sound.play('Postol_shooting', { volume: 0.25 });
+            // Get bullet from bullets group
+            var bullet = p1Bullets.get().setActive(true).setVisible(true);
+
+            if (bullet) {
+                bullet.Fire(p1player, r1reticle);
+                //this.physics.add.collider(enemy, bullet, enemyHitCallback);
+            }
+        }, this);
+
+        game.canvas.addEventListener('mousedown', function () {
+            game.input.mouse.requestPointerLock();
+        });
+
+        // Exit pointer lock when Q or escape (by default) is pressed.
+        this.input.keyboard.on('keydown_Q', function (event) {
+            if (game.input.mouse.locked)
+                game.input.mouse.releasePointerLock();
+        }, 0, this);
+
+        this.input.on('pointermove', function (pointer) {
+            if (this.input.mouse.locked) {
+                r1reticle.movement(p1player, pointer.movementX, pointer.movementY);
+            }
+        }, this);
+
     }
 
     update() {
+        p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
+        //this.adjustCamera(p1player, r1reticle);
 
-        // check key input for restart / menu
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
-            this.scene.restart();
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLeft)) {
-            this.scene.start("menuScene");
-        }
-        //scroll starfield
-        this.starfield.tilePositionX -= 4;
+        // Make reticle move with player
+        r1reticle.body.velocity.x = p1player.body.velocity.x;
+        r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        if (!this.gameOver) {
-            this.p1Rocket.update();         // update rocket sprite
-            this.ship01.update();           // update spaceships (x3)
-            this.ship02.update();
-            this.ship03.update();
-        }
-
-        // check collisions
-        if (this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship03);
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship02);
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship01);
-        }
-
+        this.constrainVelocity(p1player, 500);
+        this.constrainReticle(r1reticle, 550, p1player);
 
     }
 
-    checkCollision(rocket, ship) {
-        // simple AABB checking
-        if (rocket.x < ship.x + ship.width &&
-            rocket.x + rocket.width > ship.x &&
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship.y) {
-            return true;
-        } else {
-            return false;
+    constrainVelocity(sprite, maxVelocity) {
+        if (!sprite || !sprite.body)
+            return;
+
+        var angle, currVelocitySqr, vx, vy;
+        vx = sprite.body.velocity.x;
+        vy = sprite.body.velocity.y;
+        currVelocitySqr = vx * vx + vy * vy;
+
+        if (currVelocitySqr > maxVelocity * maxVelocity) {
+            angle = Math.atan2(vy, vx);
+            vx = Math.cos(angle) * maxVelocity;
+            vy = Math.sin(angle) * maxVelocity;
+            sprite.body.velocity.x = vx;
+            sprite.body.velocity.y = vy;
         }
     }
 
-    shipExplode(ship) {
-        ship.alpha = 0;                         // temporarily hide ship
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after animation completes
-            ship.reset();                       // reset ship position
-            ship.alpha = 1;                     // make ship visible again
-            boom.destroy();                     // remove explosion sprite
-        });
-        // score increment and repaint
-        this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
+    constrainReticle(reticle, radius, player) {
+
+        // Only works when camera follows player
+        var distX = reticle.x - player.x;
+        var distY = reticle.y - player.y;
+
+        // Ensures reticle cannot be moved offscreen
+        if (distX > gamewitdh) {
+            console.log('fix');
+            reticle.x = player.x + gamewitdh;
+        }
+        else if (distX < -gamewitdh) {
+            console.log('fix');
+            reticle.x = player.x - gamewitdh;
+        }
+
+        if (distY > gameheight)
+            reticle.y = player.y + gameheight;
+        else if (distY < -gameheight)
+            reticle.y = player.y - gameheight;
+
+        // Ensures reticle cannot be moved further than dist(radius) from player
+        var distBetween = Phaser.Math.Distance.Between(player.x, player.y, reticle.x, reticle.y);
+        if (distBetween > radius) {
+            // Place reticle on perimeter of circle on line intersecting player & reticle
+            var scale = distBetween / radius;
+
+            console.log('fix')
+
+            reticle.x = player.x + (reticle.x - player.x) / scale;
+            reticle.y = player.y + (reticle.y - player.y) / scale;
+        }
+
     }
+
+    adjustCamera(sprite1, sprite2) {
+        var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
+        var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
+        console.log(avgX);
+        console.log(avgY);
+        this.cameras.main.scrollX = avgX;
+        this.cameras.main.scrollY = avgY;
+    }
+
 }
