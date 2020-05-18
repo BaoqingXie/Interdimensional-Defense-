@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
+        this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
@@ -29,6 +30,8 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
+        this.badguy = new Enemy(this, gamewitdh / 2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
+
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -51,7 +54,7 @@ class Play extends Phaser.Scene {
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle);
-                //this.physics.add.collider(enemy, bullet, enemyHitCallback);
+                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -76,11 +79,26 @@ class Play extends Phaser.Scene {
     update() {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
+        this.badguy.rotation = Phaser.Math.Angle.Between(this.badguy.x, this.badguy.y, p1player.x, p1player.y);
 
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
+        var distx = Math.abs(this.badguy.x - p1player.x);
+        var disty = Math.abs(this.badguy.y - p1player.y);
+
+        if (this.badguy.x > p1player.x)
+            this.badguy.x -= 1 + distx / 1000;
+        else if (this.badguy.x < p1player.x)
+            this.badguy.x += 1 + distx / 1000;
+
+        if (this.badguy.y > p1player.y)
+            this.badguy.y -= 1 + disty / 1000;
+        else if (this.badguy.y < p1player.y)
+            this.badguy.y += 1 + disty / 1000;
+
+        //if(this.badguy.x)
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
@@ -88,6 +106,22 @@ class Play extends Phaser.Scene {
         if(this.dimension.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.45 });
             this.dimension.setTexture(this.dimension.getfilename()); //updates bg texture to current dimension
+        }
+    }
+
+    enemyHitCallback(enemyHit, bulletHit) {
+        // Reduce hp of enemy
+        if (bulletHit.active === true && enemyHit.active === true) {
+            enemyHit.hp = enemyHit.hp - 1;
+            console.log("Enemy hp: ", enemyHit.hp);
+
+            // Kill enemy if hp <= 0
+            if (enemyHit.hp <= 0) {
+                enemyHit.setActive(false).setVisible(false);
+            }
+
+            // Destroy bullet
+            bulletHit.setActive(false).setVisible(false);
         }
     }
 
