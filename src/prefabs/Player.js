@@ -4,7 +4,7 @@ class Player extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame);
 
         scene.physics.world.enable(this);
-        this.body.setDrag(500,500);
+        this.body.setDrag(drag,drag);
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
     }
@@ -13,7 +13,6 @@ class Player extends Phaser.GameObjects.Sprite {
 
         scene.input.keyboard.on('keydown_W', ()=> {
             this.body.setAccelerationY(-acceleration);
-            console.log('1');
         });
         scene.input.keyboard.on('keydown_S', ()=> {
             this.body.setAccelerationY(acceleration);
@@ -27,7 +26,6 @@ class Player extends Phaser.GameObjects.Sprite {
 
         scene.input.keyboard.on('keyup_W', ()=> {
             if (moveKeys['down'].isUp){
-            console.log('1');
             this.body.setAccelerationY(0);   
             }
         });
