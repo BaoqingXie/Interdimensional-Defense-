@@ -7,7 +7,7 @@ class Play extends Phaser.Scene {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
-        this.load.image('background', './assets/DimensionEarth.png');
+        this.load.image('background1', './assets/Backgrounds/DimensionEarth.png');
         this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
     }
 

@@ -25,9 +25,8 @@ class Player extends Phaser.GameObjects.Sprite {
         });
 
         scene.input.keyboard.on('keyup_W', ()=> {
-            if (moveKeys['down'].isUp){
+            if (moveKeys['down'].isUp)
             this.body.setAccelerationY(0);   
-            }
         });
         scene.input.keyboard.on('keyup_S', ()=> {
             if (moveKeys['up'].isUp)
