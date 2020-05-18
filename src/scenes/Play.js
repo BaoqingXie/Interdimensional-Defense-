@@ -71,8 +71,8 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        this.constrainVelocity(p1player, 500);
-        this.constrainReticle(r1reticle, 550, p1player);
+        this.constrainVelocity(p1player, maxSpeed);
+        this.constrainReticle(r1reticle, 600, p1player);
 
     }
 
@@ -137,5 +137,4 @@ class Play extends Phaser.Scene {
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
-
 }

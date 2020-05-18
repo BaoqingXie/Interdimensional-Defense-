@@ -12,17 +12,17 @@ class Player extends Phaser.GameObjects.Sprite {
     movement(scene) {
 
         scene.input.keyboard.on('keydown_W', ()=> {
-            this.body.setAccelerationY(-400);
+            this.body.setAccelerationY(-acceleration);
             console.log('1');
         });
         scene.input.keyboard.on('keydown_S', ()=> {
-            this.body.setAccelerationY(400);
+            this.body.setAccelerationY(acceleration);
         });
         scene.input.keyboard.on('keydown_A', ()=> {
-            this.body.setAccelerationX(-400);
+            this.body.setAccelerationX(-acceleration);
         });
         scene.input.keyboard.on('keydown_D', ()=> {
-            this.body.setAccelerationX(400);
+            this.body.setAccelerationX(acceleration);
         });
 
         scene.input.keyboard.on('keyup_W', ()=> {
