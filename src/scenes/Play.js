@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
+        this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('background', './assets/DimensionEarth.png');
