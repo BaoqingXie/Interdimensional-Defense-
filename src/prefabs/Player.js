@@ -14,7 +14,6 @@ class Player extends Phaser.GameObjects.Sprite {
 
         scene.input.keyboard.on('keydown_W', ()=> {
             this.body.setAccelerationY(-acceleration);
-            console.log('1');
         });
         scene.input.keyboard.on('keydown_S', ()=> {
             this.body.setAccelerationY(acceleration);

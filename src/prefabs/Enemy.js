@@ -7,6 +7,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
         scene.physics.world.enable(this);
         scene.add.existing(this); 
         this.dimension = type; // give enemy a dimension it belongs to
+        this.hp = 3;
     }
 
     update() {
