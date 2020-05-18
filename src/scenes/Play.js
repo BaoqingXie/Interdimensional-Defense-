@@ -8,12 +8,13 @@ class Play extends Phaser.Scene {
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('background', './assets/DimensionEarth.png');
+        this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
     }
 
     create() {
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
 
-        p1Bullets =  this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+        p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 
         p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
@@ -33,12 +34,12 @@ class Play extends Phaser.Scene {
         this.input.on('pointerdown', function (pointer, time, lastFired) {
             if (p1player.active === false)
                 return;
-    
+
+            this.sound.play('Postol_shooting', { volume: 0.25 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
-    
-            if (bullet)
-            {
+
+            if (bullet) {
                 bullet.Fire(p1player, r1reticle);
                 //this.physics.add.collider(enemy, bullet, enemyHitCallback);
             }
