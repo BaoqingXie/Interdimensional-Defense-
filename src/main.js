@@ -16,13 +16,10 @@ let config = {
         }
     },
 
-    scene: [Play],
+    scene: [Menu,Play],
 };
 
 let game = new Phaser.Game(config);
-
-//variable
-let keyW, keyA, keyS, keyD;
 
 let deltax = 0;
 let deltay = 0;
