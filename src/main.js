@@ -30,3 +30,5 @@ let p1Bullets;
 
 let moveKeys;
 
+let maxSpeed = 250;
+let acceleration = 2000;
