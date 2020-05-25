@@ -5,19 +5,32 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
+        this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
         this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
         this.load.image('reticle', './assets/reticle.jpg');
-        this.load.image('background', './assets/DimensionEarth.png');
-        this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
+        this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
+        //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
+        this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+        this.load.audio('Pistol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
     }
 
     create() {
-        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
+        this.dimension = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 
-        p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
-        r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+
+
+        key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+
+
+        this.badguy = new Enemy(this, gamewidth / 2 + 100, gameheight / 2 + 100, 'Enemy1', 0, 1, 4).setOrigin(0.5, 0.5);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -35,13 +48,13 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('Postol_shooting', { volume: 0.25 });
+            this.sound.play('Pistol_shooting', { volume: 0.25 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle);
-                //this.physics.add.collider(enemy, bullet, enemyHitCallback);
+                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -66,14 +79,37 @@ class Play extends Phaser.Scene {
     update() {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
+        
 
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        this.constrainVelocity(p1player, 500);
-        this.constrainReticle(r1reticle, 550, p1player);
+        this.badguy.update();
+        this.constrainVelocity(p1player, maxSpeed);
+        this.constrainReticle(r1reticle, 600, p1player);
 
+        
+        if(this.dimension.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+            this.sound.play('dimension_shift', { volume: 0.45 });
+            this.dimension.setTexture(this.dimension.getfilename()); //updates bg texture to current dimension
+        }
+    }
+
+    enemyHitCallback(enemyHit, bulletHit) {
+        // Reduce hp of enemy
+        if (bulletHit.active === true && enemyHit.active === true) {
+            enemyHit.hp = enemyHit.hp - 1;
+            console.log("Enemy hp: ", enemyHit.hp);
+
+            // Kill enemy if hp <= 0
+            if (enemyHit.hp <= 0) {
+                enemyHit.destroy();
+            }
+
+            // Destroy bullet
+            bulletHit.destroy();
+        }
     }
 
     constrainVelocity(sprite, maxVelocity) {
@@ -101,13 +137,13 @@ class Play extends Phaser.Scene {
         var distY = reticle.y - player.y;
 
         // Ensures reticle cannot be moved offscreen
-        if (distX > gamewitdh) {
+        if (distX > gamewidth) {
             console.log('fix');
-            reticle.x = player.x + gamewitdh;
+            reticle.x = player.x + gamewidth;
         }
-        else if (distX < -gamewitdh) {
+        else if (distX < -gamewidth) {
             console.log('fix');
-            reticle.x = player.x - gamewitdh;
+            reticle.x = player.x - gamewidth;
         }
 
         if (distY > gameheight)
@@ -137,5 +173,4 @@ class Play extends Phaser.Scene {
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
-
 }

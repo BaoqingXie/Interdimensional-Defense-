@@ -8,7 +8,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
 
         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
         //attributes
-        this.speed = 1;
+        this.speed = bulletSpeed;
         this.born = 0;
         this.direction = 0;
         this.xSpeed = 0;
@@ -41,8 +41,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         this.born += delta;
         if (this.born > 1800)
         {
-            this.setActive(false);
-            this.setVisible(false);
+            this.destroy();
         }
     }
 

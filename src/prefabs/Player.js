@@ -4,32 +4,30 @@ class Player extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame);
 
         scene.physics.world.enable(this);
-        this.body.setDrag(500,500);
+        this.body.setDrag(drag,drag);
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
+        this.hp = 5;
     }
 
     movement(scene) {
 
         scene.input.keyboard.on('keydown_W', ()=> {
-            this.body.setAccelerationY(-400);
-            console.log('1');
+            this.body.setAccelerationY(-acceleration);
         });
         scene.input.keyboard.on('keydown_S', ()=> {
-            this.body.setAccelerationY(400);
+            this.body.setAccelerationY(acceleration);
         });
         scene.input.keyboard.on('keydown_A', ()=> {
-            this.body.setAccelerationX(-400);
+            this.body.setAccelerationX(-acceleration);
         });
         scene.input.keyboard.on('keydown_D', ()=> {
-            this.body.setAccelerationX(400);
+            this.body.setAccelerationX(acceleration);
         });
 
         scene.input.keyboard.on('keyup_W', ()=> {
-            if (moveKeys['down'].isUp){
-            console.log('1');
+            if (moveKeys['down'].isUp)
             this.body.setAccelerationY(0);   
-            }
         });
         scene.input.keyboard.on('keyup_S', ()=> {
             if (moveKeys['up'].isUp)
@@ -44,5 +42,9 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setAccelerationX(0);
         });
 
+    }
+
+    Hpchange(number){
+        this.hp += number;
     }
 }
