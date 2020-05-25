@@ -15,12 +15,12 @@ class Bullet extends Phaser.GameObjects.Sprite {
         this.ySpeed = 0;
     }
 
-    Fire(shooter, target){
+    Fire(shooter, targetX, targetY){
         this.setPosition(shooter.x, shooter.y); // Initial position
-        this.direction = Math.atan( (target.x-this.x) / (target.y-this.y));
+        this.direction = Math.atan( (targetX-this.x) / (targetY-this.y));
 
         // Calculate X and y velocity of bullet to moves it from shooter to target
-        if (target.y >= this.y)
+        if (targetY >= this.y)
         {
             this.xSpeed = this.speed*Math.sin(this.direction);
             this.ySpeed = this.speed*Math.cos(this.direction);
@@ -30,6 +30,8 @@ class Bullet extends Phaser.GameObjects.Sprite {
             this.xSpeed = -this.speed*Math.sin(this.direction);
             this.ySpeed = -this.speed*Math.cos(this.direction);
         }
+
+        console.log('fire');
 
         this.rotation = shooter.rotation; // angle bullet with shooters rotation
         this.born = 0; // Time since new bullet spawned
