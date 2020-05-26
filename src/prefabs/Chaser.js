@@ -1,4 +1,4 @@
-class Enemy extends Phaser.GameObjects.Sprite {
+class Chaser extends Phaser.GameObjects.Sprite {
 
     constructor (scene, x, y, texture, frame, dim, spd) {
         super(scene, x, y, texture, frame);

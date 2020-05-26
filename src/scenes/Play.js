@@ -30,7 +30,8 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.badguy = new Enemy(this, gamewidth / 2 + 100, gameheight / 2 + 100, 'Enemy1', 0, 1, 4).setOrigin(0.5, 0.5);
+        this.badguy1 = new Chaser(this, 100, 50, 'Enemy1', 0, 1, 2).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
+        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'Enemy1', 0, 2, 3).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -54,7 +55,8 @@ class Play extends Phaser.Scene {
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle);
-                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -85,7 +87,8 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        this.badguy.update();
+        this.badguy1.update();
+        this.badguy2.update();
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
@@ -98,7 +101,9 @@ class Play extends Phaser.Scene {
 
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
-        if (bulletHit.active === true && enemyHit.active === true) {
+        console.log(this);
+        console.log(Phaser.Scene);
+        if (enemyHit.dimension == this.Scene.dimension && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             console.log("Enemy hp: ", enemyHit.hp);
 
