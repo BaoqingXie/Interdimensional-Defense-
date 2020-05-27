@@ -34,6 +34,10 @@ class Dimension extends Phaser.GameObjects.Sprite{
         return false;
     }
 
+    getdimension(){
+        return this.dimension;
+    }
+
     getfilename(){
         return this.dimensionfile;
     }
