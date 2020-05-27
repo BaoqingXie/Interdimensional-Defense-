@@ -41,8 +41,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         this.born += delta;
         if (this.born > 1800)
         {
-            this.setActive(false);
-            this.setVisible(false);
+            this.destroy();
         }
     }
 
