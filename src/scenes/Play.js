@@ -5,7 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
-        this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
+        this.load.image('charger2', './assets/charger2-0.png');
+        this.load.image('chaser3', './assets/chaser3-0.png');
         this.load.image('laser', './assets/laser.png');
         this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
@@ -30,8 +31,8 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.badguy1 = new Chaser(this, 100, 50, 'Enemy1', 0, 1).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
-        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'Enemy1', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 1).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
+        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
