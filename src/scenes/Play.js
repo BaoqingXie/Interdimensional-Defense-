@@ -6,20 +6,20 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
         this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
-        this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
+        this.load.image('laser', './assets/laser.png');
         this.load.image('reticle', './assets/reticle.jpg');
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
-        this.load.audio('Pistol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.audio('laser_sound', './assets/SoundEffects/laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
     }
 
     create() {
-        this.dimension = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+        this.dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
-        p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+        p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
@@ -30,8 +30,8 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.badguy1 = new Chaser(this, 100, 50, 'Enemy1', 0, 1, 2).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
-        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'Enemy1', 0, 2, 3).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+        this.badguy1 = new Chaser(this, 100, 50, 'Enemy1', 0, 1).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
+        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'Enemy1', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -49,7 +49,7 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('Pistol_shooting', { volume: 0.25 });
+            this.sound.play('laser_sound', { volume: 0.4 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
@@ -93,17 +93,15 @@ class Play extends Phaser.Scene {
         this.constrainReticle(r1reticle, 600, p1player);
 
         
-        if(this.dimension.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+        if(this.dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.45 });
-            this.dimension.setTexture(this.dimension.getfilename()); //updates bg texture to current dimension
+            this.dimensionManager.setTexture(this.dimensionManager.getfilename()); //updates bg texture to current dimension
         }
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
-        console.log(this);
-        console.log(Phaser.Scene);
-        if (enemyHit.dimension == this.Scene.dimension && bulletHit.active === true && enemyHit.active === true) {
+        if (enemyHit.dimension == this.dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             console.log("Enemy hp: ", enemyHit.hp);
 
