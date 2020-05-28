@@ -9,7 +9,6 @@ class Charger extends Phaser.GameObjects.Sprite {
         this.dimension = dim; // give enemy a dimension it belongs to
         this.speed = chargerSpeed;
         this.hp = 3;
-        this.rotation = Math.PI/2; // face down
     }
 
     update() {
