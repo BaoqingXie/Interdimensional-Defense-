@@ -4,7 +4,9 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
+        this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        
+        this.load.image('Player', './assets/player1-0.png');
         this.load.image('charger2', './assets/charger2-0.png');
         this.load.image('chaser3', './assets/chaser3-0.png');
         this.load.image('laser', './assets/laser.png');
@@ -15,9 +17,163 @@ class Play extends Phaser.Scene {
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
         this.load.audio('laser_sound', './assets/SoundEffects/laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
+
+        // load animation/sprite atlas
+        
     }
 
     create() {
+        //create anims using the texture atlas
+        this.anims.create({
+            key: 'player-walk',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'player1-',
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'charger1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger1-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger1',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger1-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'charger2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger2-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger2',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger2-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'charger3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger3-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger3-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'chaser1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser1-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'h-chaser1-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'chaser2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser2-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'h-chaser2-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'chaser3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser3-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'h-chaser3-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
         this.dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
@@ -32,8 +188,9 @@ class Play extends Phaser.Scene {
 
 
         this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 1).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
+        this.badguy1.play('chaser3');
         this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-
+        this.badguy2.play('h-charger2');
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
