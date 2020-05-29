@@ -1,12 +1,12 @@
 //Bullet prefab
-class Bullet extends Phaser.GameObjects.Sprite {
+class Laser extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
 
         scene.physics.world.enable(this);
         scene.add.existing(this); //add to existing, diplaylist updatelist
 
-        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'laser');
         //attributes
         this.speed = bulletSpeed;
         this.born = 0;

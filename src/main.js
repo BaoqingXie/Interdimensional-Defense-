@@ -36,6 +36,13 @@ let key3;
 let bulletSpeed = 1;
 
 let shiftcooldown = 300;
+//player movement
 let drag = 1000;
 let maxSpeed = 250;
 let acceleration = 2400;
+
+//chasers
+let chaserSpeed = 1;
+
+//chargers
+let chargerSpeed = 0.8;
