@@ -6,15 +6,17 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
         
-        this.load.image('Player', './assets/player1-0.png');
-        this.load.image('charger2', './assets/charger2-0.png');
-        this.load.image('chaser3', './assets/chaser3-0.png');
-        this.load.image('laser', './assets/laser.png');
-        this.load.image('reticle', './assets/reticle.jpg');
+        this.load.image('Player', './assets/Sprites/player1-0.png');
+        this.load.image('charger2', './assets/Sprites/charger2-0.png');
+        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
+        this.load.image('laser', './assets/Sprites/laser.png');
+        this.load.image('reticle', './assets/Sprites/reticle.png');
+
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+
         this.load.audio('laser_sound', './assets/SoundEffects/laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
@@ -179,7 +181,7 @@ class Play extends Phaser.Scene {
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
-        r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+        r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
