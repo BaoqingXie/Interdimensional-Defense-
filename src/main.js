@@ -24,6 +24,7 @@ let game = new Phaser.Game(config);
 let deltax = 0;
 let deltay = 0;
 
+let dimensionManager;
 let p1player;
 let r1reticle;
 let p1Bullets;

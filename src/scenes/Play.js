@@ -27,12 +27,22 @@ class Play extends Phaser.Scene {
     create() {
         //create anims using the texture atlas
         this.anims.create({
+            key: 'player-idle',
+            frames: [
+                { key: 'ID-spritesheet', frame: 'player-8'},
+                { key: 'ID-spritesheet', frame: 'player-0'},
+            ],
+            frameRate: 6,
+            repeat: -1
+        });
+        
+        this.anims.create({
             key: 'player-walk',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 7,
                 zeroPad: 1,
-                prefix: 'player1-',
+                prefix: 'player-',
             }),
             frameRate: 12,
             repeat: -1
@@ -122,7 +132,7 @@ class Play extends Phaser.Scene {
             key: 'h-chaser1', 
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
-                end: 7,
+                end: 3,
                 zeroPad: 1,
                 prefix: 'h-chaser1-',
             }),
@@ -145,7 +155,7 @@ class Play extends Phaser.Scene {
             key: 'h-chaser2', 
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
-                end: 7,
+                end: 3,
                 zeroPad: 1,
                 prefix: 'h-chaser2-',
             }),
@@ -168,7 +178,7 @@ class Play extends Phaser.Scene {
             key: 'h-chaser3', 
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
-                end: 7,
+                end: 3,
                 zeroPad: 1,
                 prefix: 'h-chaser3-',
             }),
@@ -176,7 +186,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        this.dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
@@ -189,7 +199,7 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 1).setOrigin(0.5, 0.5); // spawn a chaser in dimension 1 (chase player)
+        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         this.badguy1.play('chaser3');
         this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
         this.badguy2.play('h-charger2');
@@ -253,15 +263,15 @@ class Play extends Phaser.Scene {
         this.constrainReticle(r1reticle, 600, p1player);
 
         
-        if(this.dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+        if(dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.45 });
-            this.dimensionManager.setTexture(this.dimensionManager.getfilename()); //updates bg texture to current dimension
+            dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
         }
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
-        if (enemyHit.dimension == this.dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
+        if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             console.log("Enemy hp: ", enemyHit.hp);
 
