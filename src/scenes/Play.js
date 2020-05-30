@@ -200,9 +200,7 @@ class Play extends Phaser.Scene {
 
 
         this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        this.badguy1.play('chaser3');
         this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-        this.badguy2.play('h-charger2');
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -252,21 +250,27 @@ class Play extends Phaser.Scene {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
         
-
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
-
-        this.badguy1.update();
-        this.badguy2.update();
+        
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
-        
+        // update dimension
         if(dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.45 });
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
+            
+            //change the badguy sprites
+            this.badguy1.changeSprite();
+            this.badguy2.changeSprite();
         }
+
+        //update badguys
+        this.badguy1.update();
+        this.badguy2.update();
+            
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -279,6 +283,8 @@ class Play extends Phaser.Scene {
             if (enemyHit.hp <= 0) {
                 enemyHit.destroy();
             }
+
+            console.log(enemyHit);
 
             // Destroy bullet
             bulletHit.destroy();
