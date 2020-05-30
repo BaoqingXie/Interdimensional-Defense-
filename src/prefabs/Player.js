@@ -8,7 +8,6 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
         this.hp = 5;
-        console.log(this);
     }
 
     movement(scene) {
@@ -34,32 +33,29 @@ class Player extends Phaser.GameObjects.Sprite {
             if (moveKeys['down'].isUp)
             this.body.setAccelerationY(0);   
             
-            console.log(this.body.acceleration);
             if(this.body.acceleration.x == 0)
-                this.anims.stop();
+            this.play('player-idle');
         });
         scene.input.keyboard.on('keyup_S', ()=> {
             if (moveKeys['up'].isUp)
             this.body.setAccelerationY(0);
             
-            console.log(this.body.acceleration);
             if(this.body.acceleration.x == 0)
-                this.anims.stop();
+            this.play('player-idle');
         });
         scene.input.keyboard.on('keyup_A', ()=> {
             if (moveKeys['right'].isUp)
             this.body.setAccelerationX(0);
             
             if(this.body.acceleration.y == 0)
-                this.anims.stop();
+            this.play('player-idle');
         });
         scene.input.keyboard.on('keyup_D', ()=> {
             if (moveKeys['left'].isUp)
             this.body.setAccelerationX(0);
             
-            console.log(this.body.acceleration);
             if(this.body.acceleration.y == 0)
-                this.anims.stop();
+            this.play('player-idle');
         });
 
     }
