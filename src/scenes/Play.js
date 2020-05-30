@@ -268,10 +268,8 @@ class Play extends Phaser.Scene {
         }
 
         //update badguys
-        if(this.badguy1 != null)
-            this.badguy1.update();
-        if(this.badguy2 != null)
-            this.badguy2.update();
+        this.badguy1.update();
+        this.badguy2.update();
             
     }
 
@@ -285,6 +283,8 @@ class Play extends Phaser.Scene {
             if (enemyHit.hp <= 0) {
                 enemyHit.destroy();
             }
+
+            console.log(enemyHit);
 
             // Destroy bullet
             bulletHit.destroy();

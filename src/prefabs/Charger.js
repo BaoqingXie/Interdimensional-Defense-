@@ -41,10 +41,12 @@ class Charger extends Phaser.GameObjects.Sprite {
     }
 
     changeSprite(){ // called during dimension.update(); updates sprite to either "hidden" or "shown"
-        if(this.dimension == dimensionManager.getdimension()){
-            this.play(this.defAnimKey); // play regular animation
-        }else{
-            this.play(this.hidAnimKey); // play the hidden animation
+        if(this.active){    
+            if(this.dimension == dimensionManager.getdimension()){
+                this.play(this.defAnimKey); // play regular animation
+            }else{
+                this.play(this.hidAnimKey); // play the hidden animation
+            }
         }
     }
     
