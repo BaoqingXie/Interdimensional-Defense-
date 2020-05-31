@@ -30,6 +30,7 @@ class Dimension extends Phaser.GameObjects.Sprite{
             setTimeout(() => {this.oncooldown = false;}, shiftcooldown); //cooldown
             return true;
         }
+
         //no input, shifting is on cooldown, or already in dimension
         return false;
     }
