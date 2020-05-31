@@ -1,14 +1,14 @@
 //Bullet prefab
-class Bullet extends Phaser.GameObjects.Sprite {
+class Laser extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
 
         scene.physics.world.enable(this);
         scene.add.existing(this); //add to existing, diplaylist updatelist
 
-        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'laser');
         //attributes
-        this.speed = 1;
+        this.speed = bulletSpeed;
         this.born = 0;
         this.direction = 0;
         this.xSpeed = 0;
@@ -43,8 +43,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         this.born += delta;
         if (this.born > 1800)
         {
-            this.setActive(false);
-            this.setVisible(false);
+            this.destroy();
         }
     }
 

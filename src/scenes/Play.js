@@ -4,24 +4,203 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('Player', './assets/tempAssets/PNG/Man Blue/manBlue_gun.png');
-        this.load.image('Enemy1', './assets/tempAssets/PNG/Man Brown/manBrown_stand.png');
-        this.load.image('bullet', './assets/tempAssets/PNG/weapon_silencer.png');
-        this.load.image('reticle', './assets/reticle.jpg');
-        this.load.image('background', './assets/DimensionEarth.png');
-        this.load.audio('Postol_shooting', './assets/SoundEffects/Pistol_shooting.mp3');
+        this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        
+        this.load.image('Player', './assets/Sprites/player1-0.png');
+        this.load.image('charger2', './assets/Sprites/charger2-0.png');
+        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
+        this.load.image('laser', './assets/Sprites/laser.png');
+        this.load.image('reticle', './assets/Sprites/reticle.png');
+
+        this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
+        this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
+        //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
+        this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+
+        this.load.audio('laser_sound', './assets/SoundEffects/laser.mp3');
+        this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
+
+        // load animation/sprite atlas
+        
     }
 
     create() {
-        this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setScale(1, 1).setOrigin(0, 0);
+        //create anims using the texture atlas
+        this.anims.create({
+            key: 'player-idle',
+            frames: [
+                { key: 'ID-spritesheet', frame: 'player-8'},
+                { key: 'ID-spritesheet', frame: 'player-0'},
+            ],
+            frameRate: 6,
+            repeat: -1
+        });
+        
+        this.anims.create({
+            key: 'player-walk',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'player-',
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
 
-        p1Bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+        this.anims.create({
+            key: 'charger1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger1-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger1',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger1-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
 
-        p1player = new Player(this, gamewitdh / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
-        r1reticle = new reticle(this, gamewitdh / 2, gameheight / 2, 'reticle').setScale(0.01, 0.01);
+        this.anims.create({
+            key: 'charger2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger2-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger2',
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger2-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
 
-        this.badguy = new Enemy(this, gamewitdh / 2 + 100, gameheight / 2 + 100, 'Enemy1').setOrigin(0.5, 0.5);
+        this.anims.create({
+            key: 'charger3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'charger3-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-charger3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 11,
+                zeroPad: 2,
+                prefix: 'h-charger3-',
+            }),
+            frameRate: 9,
+            repeat: -1
+        });
 
+        this.anims.create({
+            key: 'chaser1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser1-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser1', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 3,
+                zeroPad: 1,
+                prefix: 'h-chaser1-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'chaser2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser2-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser2', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 3,
+                zeroPad: 1,
+                prefix: 'h-chaser2-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'chaser3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 7,
+                zeroPad: 1,
+                prefix: 'chaser3-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'h-chaser3', 
+            frames: this.anims.generateFrameNames('ID-spritesheet', {
+                start: 0,
+                end: 3,
+                zeroPad: 1,
+                prefix: 'h-chaser3-',
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+
+        p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
+
+        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
+
+
+        key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+
+
+        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -38,7 +217,7 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('Postol_shooting', { volume: 0.25 });
+            this.sound.play('laser_sound', { volume: 0.4 });
             // Get bullet from bullets group
 
             for(var i = 0; i<5; ++i){
@@ -56,11 +235,9 @@ class Play extends Phaser.Scene {
             var bullet3 = p1Bullets.get().setActive(true).setVisible(true);
 
             if (bullet) {
-                bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                bullet1.Fire(p1player, r1reticle.x+10, r1reticle.y);
-                bullet2.Fire(p1player, r1reticle.x+20, r1reticle.y);
-                bullet3.Fire(p1player, r1reticle.x+30, r1reticle.y);
-                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
+                bullet.Fire(p1player, r1reticle);
+                this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
             }
             */
         }, this);
@@ -86,44 +263,45 @@ class Play extends Phaser.Scene {
     update() {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
-        this.badguy.rotation = Phaser.Math.Angle.Between(this.badguy.x, this.badguy.y, p1player.x, p1player.y);
-
+        
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
-
-        var distx = Math.abs(this.badguy.x - p1player.x);
-        var disty = Math.abs(this.badguy.y - p1player.y);
-
-        if (this.badguy.x > p1player.x)
-            this.badguy.x -= 1 + distx / 1000;
-        else if (this.badguy.x < p1player.x)
-            this.badguy.x += 1 + distx / 1000;
-
-        if (this.badguy.y > p1player.y)
-            this.badguy.y -= 1 + disty / 1000;
-        else if (this.badguy.y < p1player.y)
-            this.badguy.y += 1 + disty / 1000;
-
-        //if(this.badguy.x)
+        
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
+        // update dimension
+        if(dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+            this.sound.play('dimension_shift', { volume: 0.45 });
+            dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
+            
+            //change the badguy sprites
+            this.badguy1.changeSprite();
+            this.badguy2.changeSprite();
+        }
+
+        //update badguys
+        this.badguy1.update();
+        this.badguy2.update();
+            
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
-        if (bulletHit.active === true && enemyHit.active === true) {
+        if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             console.log("Enemy hp: ", enemyHit.hp);
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
-                enemyHit.setActive(false).setVisible(false);
+                enemyHit.destroy();
             }
 
+            console.log(enemyHit);
+
             // Destroy bullet
-            bulletHit.setActive(false).setVisible(false);
+            bulletHit.destroy();
         }
     }
 
@@ -152,13 +330,13 @@ class Play extends Phaser.Scene {
         var distY = reticle.y - player.y;
 
         // Ensures reticle cannot be moved offscreen
-        if (distX > gamewitdh) {
+        if (distX > gamewidth) {
             console.log('fix');
-            reticle.x = player.x + gamewitdh;
+            reticle.x = player.x + gamewidth;
         }
-        else if (distX < -gamewitdh) {
+        else if (distX < -gamewidth) {
             console.log('fix');
-            reticle.x = player.x - gamewitdh;
+            reticle.x = player.x - gamewidth;
         }
 
         if (distY > gameheight)
