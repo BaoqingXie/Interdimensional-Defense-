@@ -16,6 +16,9 @@ class HealthBar {
         this.value = maxhp;
         this.border_thickness = 2;
 
+      
+        scene.physics.world.enable(this);
+
         this.draw();
 
         scene.add.existing(this.bar);
@@ -64,6 +67,8 @@ class HealthBar {
         }
 
         this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.value - (this.border_thickness*2), this.height - (this.border_thickness*2));
+
     }
+
 
 }
