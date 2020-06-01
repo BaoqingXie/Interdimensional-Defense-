@@ -29,6 +29,7 @@ let dimensionManager;
 let p1player;
 let r1reticle;
 let p1Bullets;
+let Healthbar;
 
 let moveKeys;
 let key1;

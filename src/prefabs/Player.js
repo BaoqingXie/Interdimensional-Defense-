@@ -8,6 +8,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
         this.hp = 5;
+        this.invincibility == false;
     }
 
     movement(scene) {
@@ -63,4 +64,6 @@ class Player extends Phaser.GameObjects.Sprite {
     Hpchange(number){
         this.hp += number;
     }
+
+    
 }
