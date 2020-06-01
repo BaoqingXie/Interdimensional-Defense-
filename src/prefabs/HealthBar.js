@@ -52,7 +52,7 @@ class HealthBar {
         this.bar.clear();
 
         //  border
-        this.bar.fillStyle(0x000000);
+        this.bar.fillStyle(this.color_border);
         this.bar.fillRect(this.x, this.y, this.width, this.height);
 
         //  Health
