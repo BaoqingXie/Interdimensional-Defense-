@@ -14,7 +14,6 @@ class Play extends Phaser.Scene {
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
-        //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
         //this.load.image('background', './assets/backgrounds/grey.png');
 
@@ -26,9 +25,6 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-
-        
-
 
         //create anims using the texture atlas
         this.anims.create({
@@ -191,7 +187,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this, 0, 0, 'bg3').setScale(1, 1).setOrigin(0, 0);
+        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
