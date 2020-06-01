@@ -40,9 +40,9 @@ class Charger extends Phaser.GameObjects.Sprite {
             // attack animation? 
             if(!this.attacking){
                 this.damageTimer = this.scene.time.addEvent({
-                    delay: 500,
+                    delay: 1000,
                     callback: () => {
-                        if(this.active){ this.scene.wallhealth.decrease(2);}
+                        if(this.active){ this.scene.wallhealth.decrease(4);}
                     },
                     loop: true
                 })
