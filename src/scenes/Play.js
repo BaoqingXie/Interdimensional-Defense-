@@ -193,7 +193,7 @@ class Play extends Phaser.Scene {
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
         health = new HealthBar(this, 50, 20);
-
+        this.wallhealth = new HealthBar(this, gamewidth/2, 450);
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
@@ -281,7 +281,6 @@ class Play extends Phaser.Scene {
         //update badguys
         this.badguy1.update();
         this.badguy2.update();
-
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
