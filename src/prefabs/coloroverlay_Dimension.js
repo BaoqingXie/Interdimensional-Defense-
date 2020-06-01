@@ -4,8 +4,6 @@ class coloroverlay_Dimension extends Phaser.GameObjects.Sprite{
 
         scene.add.existing(this);
 
-
-//----- for color overlay dimensions -----
         //constants
         this.green1 = 0x3a522c;
         this.blue2 = 0x2c4852;
@@ -16,7 +14,6 @@ class coloroverlay_Dimension extends Phaser.GameObjects.Sprite{
         this.dimension1 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.green1,255)
         this.dimension2 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.blue2,255)
         this.dimension3 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.red3,255)
-//----------------------------------------
 
         //variables
         this.dimensionindex = 3;
