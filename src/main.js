@@ -1,5 +1,7 @@
-let gamewidth = 640;
-let gameheight = 480;
+
+
+let gamewidth =  800;
+let gameheight =  600;
 
 let config = {
     type: Phaser.AUTO,
@@ -28,6 +30,7 @@ let dimensionManager;
 let p1player;
 let r1reticle;
 let p1Bullets;
+let health;
 
 let moveKeys;
 let key1;
@@ -37,6 +40,7 @@ let key3;
 let bulletSpeed = 1;
 
 let shiftcooldown = 300;
+
 //player movement
 let drag = 1000;
 let maxSpeed = 250;

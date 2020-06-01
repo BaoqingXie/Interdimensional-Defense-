@@ -20,11 +20,9 @@ class reticle extends Phaser.GameObjects.Sprite {
 
             // Ensures reticle cannot be moved offscreen
             if (distX > gamewidth){
-                console.log('fix');
                 this.x = player.x + gamewidth;
             }
             else if (distX < -gamewidth){
-                console.log('fix');
                 this.x = player.x - gamewidth;
             }
 
