@@ -13,7 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('reticle', './assets/Sprites/reticle.png');
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
-        this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
+        this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
 
@@ -192,7 +192,7 @@ class Play extends Phaser.Scene {
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
-        Healthbar = new HealthBar(this, 50, 20);
+        health = new HealthBar(this, 50, 20);
 
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -271,8 +271,12 @@ class Play extends Phaser.Scene {
         //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
         //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
 
-        this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
-        this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
+        if (p1player.invincibility == false) {
+            this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
+        }
+
+        console.log(p1player.invincibility);
 
         //update badguys
         this.badguy1.update();
@@ -295,6 +299,7 @@ class Play extends Phaser.Scene {
 
             // Destroy bullet
             bulletHit.destroy();
+
         }
     }
 
@@ -302,9 +307,15 @@ class Play extends Phaser.Scene {
         // Reduce health of player
         if (enemyHit.active === true && playerHit.active === true) {
             playerHit.Hpchange(-5);
-            Healthbar.decrease(5);
-            
+            health.decrease(5);
             console.log("Player hp: ", playerHit.health);
+
+            playerHit.invincibility = true;
+            playerHit.alpha = 0.5;
+
+
+            this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
+
         }
     }
 
