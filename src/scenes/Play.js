@@ -219,13 +219,27 @@ class Play extends Phaser.Scene {
 
             this.sound.play('laser_sound', { volume: 0.4 });
             // Get bullet from bullets group
+
+            for(var i = 0; i<5; ++i){
+                var bullet = p1Bullets.get().setActive(true).setVisible(true);
+                if (bullet) {
+                    bullet.Fire(p1player, Math.sin(i*10 - 30) * Math.Distance.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y), Math.cos(i*10 - 30) * Math.distBetween(p1player.x, p1player.y, r1reticle.x, r1reticle.y));
+                }
+                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
+            }
+
+            /*
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
+            var bullet1 = p1Bullets.get().setActive(true).setVisible(true);
+            var bullet2 = p1Bullets.get().setActive(true).setVisible(true);
+            var bullet3 = p1Bullets.get().setActive(true).setVisible(true);
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle);
                 this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
                 this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
             }
+            */
         }, this);
 
         game.canvas.addEventListener('mousedown', function () {
