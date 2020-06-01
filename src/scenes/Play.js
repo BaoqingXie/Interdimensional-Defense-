@@ -16,6 +16,7 @@ class Play extends Phaser.Scene {
         this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+        //this.load.image('background', './assets/backgrounds/grey.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
@@ -25,6 +26,10 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        
+
+
         //create anims using the texture atlas
         this.anims.create({
             key: 'player-idle',
@@ -202,6 +207,12 @@ class Play extends Phaser.Scene {
 
         this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+
+
+
+
+
+
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -218,7 +229,7 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('laser_sound', { volume: 0.4 });
+            this.sound.play('laser_sound', { volume: 0.3 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
@@ -260,7 +271,7 @@ class Play extends Phaser.Scene {
 
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
-            this.sound.play('dimension_shift', { volume: 0.45 });
+            this.sound.play('dimension_shift', { volume: 0.4 });
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites

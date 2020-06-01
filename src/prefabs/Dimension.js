@@ -3,29 +3,61 @@ class Dimension extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture, frame);
 
         scene.add.existing(this);
-        this.dimension = 3;
-        this.dimensionfile = 'bg3';
+
+
+        //constants
+        this.green1 = 0x3a522c;
+        this.blue2 = 0x2c4852;
+        this.red3 = 0x522c2f;
+        this.dalpha = 120;
+
+        //color overlays
+        this.dimension1 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.green1,255)
+        this.dimension2 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.blue2,255)
+        this.dimension3 = scene.add.rectangle(gamewidth/2,gameheight/2,gamewidth,gameheight,this.red3,255)
+
+        //variables
+        this.dimensionindex = 3;
         this.oncooldown = false;
+
+
+        //set initial dimension to red/3
+        this.dimension1.setFillStyle(this.green1,255);
+        this.dimension2.setFillStyle(this.blue2,255);
+        this.dimension3.setFillStyle(this.red3,this.dalpha);
+        
     }
 
     update(){
-        if (!this.oncooldown && this.dimension!=1 && Phaser.Input.Keyboard.JustDown(key1)){
-            this.dimension = 1;
-            this.dimensionfile = 'bg1';
+        if (!this.oncooldown && this.dimensionindex!=1 && Phaser.Input.Keyboard.JustDown(key1)){
+            this.dimension1.setFillStyle(this.green1,this.dalpha);
+            this.dimension2.setFillStyle(this.blue2,255);
+            this.dimension3.setFillStyle(this.red3,255);
+
+            this.dimensionindex = 1;
+
             this.oncooldown = true;
             setTimeout(() => {this.oncooldown = false;}, shiftcooldown); //cooldown
             return true;
         }
-        else if (!this.oncooldown && this.dimension!=2 && Phaser.Input.Keyboard.JustDown(key2)){
-            this.dimension = 2;
-            this.dimensionfile = 'bg2';
+        else if (!this.oncooldown && this.dimensionindex!=2 && Phaser.Input.Keyboard.JustDown(key2)){
+            this.dimension1.setFillStyle(this.green1,255);
+            this.dimension2.setFillStyle(this.blue2,this.dalpha);
+            this.dimension3.setFillStyle(this.red3,255);
+
+            this.dimensionindex = 2;
+
             this.oncooldown = true;
             setTimeout(() => {this.oncooldown = false;}, shiftcooldown); //cooldown
             return true;
         }
-        else if (!this.oncooldown && this.dimension!=3 && Phaser.Input.Keyboard.JustDown(key3)){
-            this.dimension = 3;
-            this.dimensionfile = 'bg3';
+        else if (!this.oncooldown && this.dimensionindex!=3 && Phaser.Input.Keyboard.JustDown(key3)){
+            this.dimension1.setFillStyle(this.green1,255);
+            this.dimension2.setFillStyle(this.blue2,255);
+            this.dimension3.setFillStyle(this.red3,this.dalpha);
+
+            this.dimensionindex = 3;
+
             this.oncooldown = true;
             setTimeout(() => {this.oncooldown = false;}, shiftcooldown); //cooldown
             return true;
@@ -36,7 +68,7 @@ class Dimension extends Phaser.GameObjects.Sprite{
     }
 
     getdimension(){
-        return this.dimension;
+        return this.dimensionindex;
     }
 
     getfilename(){
