@@ -1,5 +1,6 @@
-let gamewidth = 640;
-let gameheight = 480;
+
+let gamewitdh = 800;
+let gameheight = 600;
 
 let config = {
     type: Phaser.AUTO,
