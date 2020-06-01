@@ -1,4 +1,5 @@
 
+
 let gamewidth =  800;
 let gameheight =  600;
 
@@ -39,6 +40,7 @@ let key3;
 let bulletSpeed = 1;
 
 let shiftcooldown = 300;
+
 //player movement
 let drag = 1000;
 let maxSpeed = 250;

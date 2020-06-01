@@ -9,6 +9,7 @@ class Charger extends Phaser.GameObjects.Sprite {
         this.dimension = dim; // give enemy a dimension it belongs to
         this.speed = chargerSpeed;
         this.hp = 3;
+        this.attacking = false;
          
         if(this.dimension == 1){ // set animation keys depending on the dimension this belongs to
             this.defAnimKey = 'charger1';
@@ -31,13 +32,23 @@ class Charger extends Phaser.GameObjects.Sprite {
     }
 
     update() {
-        // chargers run straight downwards (towards the wall)
+            // chargers run straight downwards (towards the wall)
         if(this.y < 400) {// WHATEVER PIXEL THE WALL IS AT
-            this.y += this.speed;
+                this.y += this.speed;
         }
-        else{
+        else{ 
             // attack animation? 
-        } 
+            if(!this.attacking){
+                this.damageTimer = this.scene.time.addEvent({
+                    delay: 500,
+                    callback: () => {
+                        if(this.active){ this.scene.wallhealth.decrease(2);}
+                    },
+                    loop: true
+                })
+            }
+            this.attacking = true;
+        }
     }
 
     changeSprite(){ // called during dimension.update(); updates sprite to either "hidden" or "shown"
