@@ -1,5 +1,5 @@
 
-let gamewitdh = 800;
+let gamewidth = 800;
 let gameheight = 600;
 
 let config = {
