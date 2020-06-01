@@ -17,7 +17,7 @@ class Play extends Phaser.Scene {
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
 
-        this.load.audio('laser', './assets/SoundEffects/laser.mp3');
+        this.load.audio('laser_sound', './assets/SoundEffects/laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
         // load animation/sprite atlas
