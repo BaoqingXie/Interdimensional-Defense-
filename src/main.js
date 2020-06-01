@@ -1,6 +1,7 @@
 
-let gamewidth = 800;
-let gameheight = 600;
+
+let gamewidth =  800;
+let gameheight =  600;
 
 let config = {
     type: Phaser.AUTO,
@@ -29,6 +30,7 @@ let dimensionManager;
 let p1player;
 let r1reticle;
 let p1Bullets;
+let health;
 
 let moveKeys;
 let key1;
