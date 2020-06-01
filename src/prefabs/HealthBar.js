@@ -63,7 +63,7 @@ class HealthBar {
             this.bar.fillStyle(this.color_healthy);
         }
 
-        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.value - (this.border_thickness*2), this.width - (this.border_thickness*2));
+        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.value - (this.border_thickness*2), this.height - (this.border_thickness*2));
     }
 
 }
