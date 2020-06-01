@@ -5,7 +5,8 @@ class HealthBar {
 
         this.x = x;
         this.y = y;
-        this.value = 100;
+        this.value = 50;
+        scene.physics.world.enable(this);
 
         this.draw();
 
@@ -41,21 +42,22 @@ class HealthBar {
 
         //  BG
         this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 100, 16);
+        this.bar.fillRect(this.x, this.y, 50, 8);
 
         //  Health
 
         this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 94, 12);
+        this.bar.fillRect(this.x + 2, this.y + 2, 44, 6);
 
-        if (this.value < 30) {
+        if (this.value < 15) {
             this.bar.fillStyle(0xff0000);
         }
         else {
             this.bar.fillStyle(0x00ff00);
         }
 
-        this.bar.fillRect(this.x + 2, this.y + 2, this.value-4, 12);
+        this.bar.fillRect(this.x + 2, this.y + 2, this.value-4, 6);
     }
+
 
 }
