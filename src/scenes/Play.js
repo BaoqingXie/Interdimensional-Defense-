@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
-        
+
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('charger2', './assets/Sprites/charger2-0.png');
         this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
@@ -13,7 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('reticle', './assets/Sprites/reticle.png');
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
-        this.load.image('bg2', './assets/Backgrounds/tempbg2.png');
+        this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
         //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
 
@@ -21,7 +21,7 @@ class Play extends Phaser.Scene {
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
         // load animation/sprite atlas
-        
+
     }
 
     create() {
@@ -29,13 +29,13 @@ class Play extends Phaser.Scene {
         this.anims.create({
             key: 'player-idle',
             frames: [
-                { key: 'ID-spritesheet', frame: 'player-8'},
-                { key: 'ID-spritesheet', frame: 'player-0'},
+                { key: 'ID-spritesheet', frame: 'player-8' },
+                { key: 'ID-spritesheet', frame: 'player-0' },
             ],
             frameRate: 6,
             repeat: -1
         });
-        
+
         this.anims.create({
             key: 'player-walk',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
@@ -49,7 +49,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'charger1', 
+            key: 'charger1',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 11,
@@ -72,7 +72,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'charger2', 
+            key: 'charger2',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 11,
@@ -95,7 +95,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'charger3', 
+            key: 'charger3',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 11,
@@ -106,7 +106,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key: 'h-charger3', 
+            key: 'h-charger3',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 11,
@@ -118,7 +118,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'chaser1', 
+            key: 'chaser1',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 7,
@@ -129,7 +129,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key: 'h-chaser1', 
+            key: 'h-chaser1',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 3,
@@ -141,7 +141,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'chaser2', 
+            key: 'chaser2',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 7,
@@ -152,7 +152,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key: 'h-chaser2', 
+            key: 'h-chaser2',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 3,
@@ -164,7 +164,7 @@ class Play extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'chaser3', 
+            key: 'chaser3',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 7,
@@ -175,7 +175,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key: 'h-chaser3', 
+            key: 'h-chaser3',
             frames: this.anims.generateFrameNames('ID-spritesheet', {
                 start: 0,
                 end: 3,
@@ -186,12 +186,13 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+        dimensionManager = new Dimension(this, 0, 0, 'bg3').setScale(1, 1).setOrigin(0, 0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
+        health = new HealthBar(this, 50, 20);
 
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -219,27 +220,13 @@ class Play extends Phaser.Scene {
 
             this.sound.play('laser_sound', { volume: 0.4 });
             // Get bullet from bullets group
-
-            for(var i = 0; i<5; ++i){
-                var bullet = p1Bullets.get().setActive(true).setVisible(true);
-                if (bullet) {
-                    bullet.Fire(p1player, Math.sin(i*10 - 30) * Math.Distance.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y), Math.cos(i*10 - 30) * Math.distBetween(p1player.x, p1player.y, r1reticle.x, r1reticle.y));
-                }
-                this.physics.add.collider(this.badguy, bullet, this.enemyHitCallback);
-            }
-
-            /*
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
-            var bullet1 = p1Bullets.get().setActive(true).setVisible(true);
-            var bullet2 = p1Bullets.get().setActive(true).setVisible(true);
-            var bullet3 = p1Bullets.get().setActive(true).setVisible(true);
 
             if (bullet) {
-                bullet.Fire(p1player, r1reticle);
+                bullet.Fire(p1player, r1reticle.x, r1reticle.y);
                 this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
                 this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
             }
-            */
         }, this);
 
         game.canvas.addEventListener('mousedown', function () {
@@ -263,28 +250,38 @@ class Play extends Phaser.Scene {
     update() {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
-        
+
         // Make reticle move with player
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
-        
+
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
         // update dimension
-        if(dimensionManager.update()){  //dimension.update returns true when 1, 2, or 3 is pressed
+        if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.45 });
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
-            
+
             //change the badguy sprites
             this.badguy1.changeSprite();
             this.badguy2.changeSprite();
         }
 
+        //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
+        //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
+
+        if (p1player.invincibility == false) {
+            this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
+        }
+
+        console.log(p1player.invincibility);
+
         //update badguys
         this.badguy1.update();
         this.badguy2.update();
-            
+
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -302,6 +299,23 @@ class Play extends Phaser.Scene {
 
             // Destroy bullet
             bulletHit.destroy();
+
+        }
+    }
+
+    playerHitCallback(playerHit, enemyHit) {
+        // Reduce health of player
+        if (enemyHit.active === true && playerHit.active === true) {
+            playerHit.Hpchange(-5);
+            health.decrease(5);
+            console.log("Player hp: ", playerHit.health);
+
+            playerHit.invincibility = true;
+            playerHit.alpha = 0.5;
+
+
+            this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
+
         }
     }
 
