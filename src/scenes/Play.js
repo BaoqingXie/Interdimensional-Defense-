@@ -23,9 +23,6 @@ class Play extends Phaser.Scene {
 
     create() {
 
-        
-
-
         //create anims using the texture atlas
         this.anims.create({
             key: 'player-idle',
