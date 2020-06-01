@@ -188,7 +188,7 @@ class Play extends Phaser.Scene {
         });
 
 
-        
+
         dimensionManager = new Dimension(this,0,0,'background').setScale(1,1).setOrigin(0,0);
 
 
