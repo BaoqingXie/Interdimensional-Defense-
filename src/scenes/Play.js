@@ -194,8 +194,9 @@ class Play extends Phaser.Scene {
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
-        health = new HealthBar(this,50,20,100,16,100,0x00ff00,0xff0000,0xffffff,0x000000);
-        this.wallhealth = new HealthBar(this, gamewidth/2, 450,300,16,300,0x0000ff,0xff0000,0xffffff,0x000000);
+        //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
+        health = new HealthBar(this,50,20,50,16,100,0x00ff00,0xff0000,0xffffff,0x000000);
+        this.wallhealth = new HealthBar(this,gamewidth/2 - 150,450,300,16,300,0x40a0ff,0xff0000,0xffffff,0x000000);
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);

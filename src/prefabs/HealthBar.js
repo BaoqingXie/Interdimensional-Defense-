@@ -39,8 +39,8 @@ class HealthBar {
     increase(amount) {
         this.value += amount;
 
-        if (this.value >100) {
-            this.value = 100;
+        if (this.value > this.maxhp) {
+            this.value = this.maxhp;
         }
 
         this.draw();
@@ -55,18 +55,18 @@ class HealthBar {
         this.bar.fillStyle(this.color_border);
         this.bar.fillRect(this.x, this.y, this.width, this.height);
 
-        //  Health
+        //  background
         this.bar.fillStyle(this.color_bg);
         this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.width - (this.border_thickness*2), this.height - (this.border_thickness*2));
 
-        if (this.value < 30) {
+        if (this.value < this.maxhp/4) {
             this.bar.fillStyle(this.color_hurt);
         }
         else {
             this.bar.fillStyle(this.color_healthy);
         }
-
-        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.value - (this.border_thickness*2), this.height - (this.border_thickness*2));
+        // health
+        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, ((this.value/this.maxhp)*this.width) - (this.border_thickness*2), this.height - (this.border_thickness*2));
 
     }
 
