@@ -14,8 +14,8 @@ class Play extends Phaser.Scene {
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
-        //this.load.image('bg3', './assets/Backgrounds/tempbg3.png');
         this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
+        //this.load.image('background', './assets/backgrounds/grey.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
@@ -25,6 +25,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
         //create anims using the texture atlas
         this.anims.create({
             key: 'player-idle',
@@ -186,14 +187,16 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this, 0, 0, 'bg3').setScale(1, 1).setOrigin(0, 0);
+        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
-        health = new HealthBar(this, 50, 20);
-        this.wallhealth = new HealthBar(this, gamewidth/2, 450);
+
+        //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
+        health = new HealthBar(this,50,20,50,16,100,0x00ff00,0xff0000,0xffffff,0x000000);
+        this.wallhealth = new HealthBar(this,gamewidth/2 - 150,450,300,16,300,0x40a0ff,0xff0000,0xffffff,0x000000);
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
@@ -202,6 +205,12 @@ class Play extends Phaser.Scene {
 
         this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+
+
+
+
+
+
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -218,7 +227,7 @@ class Play extends Phaser.Scene {
             if (p1player.active === false)
                 return;
 
-            this.sound.play('laser_sound', { volume: 0.4 });
+            this.sound.play('laser_sound', { volume: 0.3 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
@@ -255,12 +264,16 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
+        health.x = p1player.x -23;
+        health.y = p1player.y + 30;
+        health.draw();
+
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
 
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
-            this.sound.play('dimension_shift', { volume: 0.45 });
+            this.sound.play('dimension_shift', { volume: 0.4 });
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
@@ -275,8 +288,6 @@ class Play extends Phaser.Scene {
             this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
             this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
         }
-
-        console.log(p1player.invincibility);
 
         //update badguys
         this.badguy1.update();
@@ -307,13 +318,13 @@ class Play extends Phaser.Scene {
         if (enemyHit.active === true && playerHit.active === true) {
             playerHit.Hpchange(-5);
             health.decrease(5);
-            console.log("Player hp: ", playerHit.health);
 
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
 
 
-            this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
+            setTimeout(() => { p1player.reset(); }, 300);
+            //this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
 
         }
     }

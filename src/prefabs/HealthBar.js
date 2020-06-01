@@ -1,11 +1,23 @@
 class HealthBar {
 
-    constructor(scene, x, y) {
+    constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border) {
         this.bar = new Phaser.GameObjects.Graphics(scene);
 
         this.x = x;
         this.y = y;
-        this.value = 100;
+        this.width = width;
+        this.height = height;
+        this.maxhp = maxhp;
+        this.color_healthy = color_healthy;
+        this.color_hurt = color_hurt;
+        this.color_bg = color_bg;
+        this.color_border = color_border;
+
+        this.value = maxhp;
+        this.border_thickness = 2;
+
+      
+        scene.physics.world.enable(this);
 
         this.draw();
 
@@ -27,8 +39,8 @@ class HealthBar {
     increase(amount) {
         this.value += amount;
 
-        if (this.value >100) {
-            this.value = 100;
+        if (this.value > this.maxhp) {
+            this.value = this.maxhp;
         }
 
         this.draw();
@@ -39,23 +51,24 @@ class HealthBar {
     draw() {
         this.bar.clear();
 
-        //  BG
-        this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 100, 16);
+        //  border
+        this.bar.fillStyle(this.color_border);
+        this.bar.fillRect(this.x, this.y, this.width, this.height);
 
-        //  Health
+        //  background
+        this.bar.fillStyle(this.color_bg);
+        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, this.width - (this.border_thickness*2), this.height - (this.border_thickness*2));
 
-        this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 94, 12);
-
-        if (this.value < 30) {
-            this.bar.fillStyle(0xff0000);
+        if (this.value < this.maxhp/4) {
+            this.bar.fillStyle(this.color_hurt);
         }
         else {
-            this.bar.fillStyle(0x00ff00);
+            this.bar.fillStyle(this.color_healthy);
         }
+        // health
+        this.bar.fillRect(this.x + this.border_thickness, this.y + this.border_thickness, ((this.value/this.maxhp)*this.width) - (this.border_thickness*2), this.height - (this.border_thickness*2));
 
-        this.bar.fillRect(this.x + 2, this.y + 2, this.value-4, 12);
     }
+
 
 }
