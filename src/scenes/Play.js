@@ -256,7 +256,7 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
         health.x = p1player.x -23;
-        health.y = p1player.y - 30;
+        health.y = p1player.y + 30;
         health.draw();
 
         this.constrainVelocity(p1player, maxSpeed);
