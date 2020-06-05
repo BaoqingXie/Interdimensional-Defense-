@@ -27,6 +27,7 @@ class Chaser extends Phaser.GameObjects.Sprite {
             this.play(this.defAnimKey); // play regular animation
         }else{
             this.play(this.hidAnimKey); // play the hidden animation
+            this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
         }
         //this.play(defAnimKey);
     }
@@ -51,8 +52,10 @@ class Chaser extends Phaser.GameObjects.Sprite {
         if(this.active){
             if(this.dimension == dimensionManager.getdimension()){
                 this.play(this.defAnimKey); // play regular animation
+                this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
+                this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
             }
         }
     }
