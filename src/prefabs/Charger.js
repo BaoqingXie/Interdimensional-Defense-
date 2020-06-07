@@ -10,6 +10,8 @@ class Charger extends Phaser.GameObjects.Sprite {
         this.speed = chargerSpeed;
         this.hp = 3;
         this.attacking = false;
+        
+        this.setOrigin(0.5, 1);
          
         if(this.dimension == 1){ // set animation keys depending on the dimension this belongs to
             this.defAnimKey = 'charger1';
@@ -34,7 +36,7 @@ class Charger extends Phaser.GameObjects.Sprite {
 
     update() {
             // chargers run straight downwards (towards the wall)
-        if(this.y < 400) {// WHATEVER PIXEL THE WALL IS AT
+        if(this.y < 415) {// WHATEVER PIXEL THE WALL IS AT
             this.y += this.speed;
         }
         else{ 

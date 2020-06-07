@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('charger2', './assets/Sprites/charger2-0.png');
@@ -25,6 +26,18 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        this.anims.create({
+            key: 'wall-anim',
+            frames: this.anims.generateFrameNames('wall-atlas', {
+                start: 1,
+                end: 5,
+                zeroPad: 1,
+                prefix: 'wall-',
+            }),
+            frameRate: 6,
+            repeat: 0
+        });
 
         //create anims using the texture atlas
         this.anims.create({
@@ -188,7 +201,7 @@ class Play extends Phaser.Scene {
         });
 
         dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
-
+        
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
@@ -202,13 +215,8 @@ class Play extends Phaser.Scene {
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
-
-        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 300, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-
-
-
-
+        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3); // spawn a chaser in dimension 3 (chase player)
+        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 300, 'charger2', 0, 2); //  spawn a charger in dimension 2 (charge the wall)
 
 
         moveKeys = this.input.keyboard.addKeys({
@@ -254,6 +262,8 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
+        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        //console.log(this.wall);
     }
 
     update() {
