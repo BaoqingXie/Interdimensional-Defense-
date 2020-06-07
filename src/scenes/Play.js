@@ -201,6 +201,8 @@ class Play extends Phaser.Scene {
         });
 
         dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
@@ -209,7 +211,7 @@ class Play extends Phaser.Scene {
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
-        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
@@ -236,7 +238,7 @@ class Play extends Phaser.Scene {
 
         //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-
+        
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
@@ -291,7 +293,7 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
-        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        
         //console.log(this.wall);
 
     }
@@ -466,8 +468,8 @@ class Play extends Phaser.Scene {
     }
 
     spawnEnemy(){
-        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'charger2', 0, 2).setOrigin(0.5, 0.5); 
-        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, 2).setOrigin(0.5, 1); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
