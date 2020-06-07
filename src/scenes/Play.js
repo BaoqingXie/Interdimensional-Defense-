@@ -11,6 +11,8 @@ class Play extends Phaser.Scene {
         this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
+        this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
+        this.load.image('explode2', './assets/Particle/12_nebula_spritesheet.png');
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
@@ -19,12 +21,21 @@ class Play extends Phaser.Scene {
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
+        this.load.audio('BulletHit', './assets/SoundEffects/BulletHit.mp3');
+        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
+        this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
 
         // load animation/sprite atlas
 
     }
 
     create() {
+
+        //particle effects when explode
+        Chaserparticle = this.add.particles('explode1');
+        Chaserparticle.setDepth(2);
+        Chargerparticle = this.add.particles('explode2');
+        Chargerparticle.setDepth(2);
 
         //create anims using the texture atlas
         this.anims.create({
@@ -187,7 +198,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+        dimensionManager = new Dimension(this, 0, 0, 'bg3').setScale(1, 1).setOrigin(0, 0);
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
@@ -195,8 +206,8 @@ class Play extends Phaser.Scene {
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
-        health = new HealthBar(this,50,20,50,16,100,0x00ff00,0xff0000,0xffffff,0x000000);
-        this.wallhealth = new HealthBar(this,gamewidth/2 - 150,450,300,16,300,0x40a0ff,0xff0000,0xffffff,0x000000);
+        health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
+        this.wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
@@ -228,8 +239,8 @@ class Play extends Phaser.Scene {
         this.levelCount = 0;
         this.spawnInterval = 5000;
         this.roundTime = 120000;
-        this.repeatCount = this.roundTime/this.spawnInterval;
-        this.levelTimeEvent = this.time.addEvent({delay: this.roundTime, callback: this.newLevel ,callbackScope: this, loop: true, startAt:this.roundTime});
+        this.repeatCount = this.roundTime / this.spawnInterval;
+        this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
         this.text = this.add.text(400, 100, [], smallConfig);
         this.text.setText('Level: ' + this.levelCount);
 
@@ -252,11 +263,12 @@ class Play extends Phaser.Scene {
             this.sound.play('laser_sound', { volume: 0.3 });
             // Get bullet from bullets group
             var bullet = p1Bullets.get().setActive(true).setVisible(true);
+            console.log(this);
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback);
-                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback, null, this);
+                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback, null, this);
             }
         }, this);
 
@@ -287,7 +299,7 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        health.x = p1player.x -23;
+        health.x = p1player.x - 23;
         health.y = p1player.y + 30;
         health.draw();
 
@@ -302,13 +314,13 @@ class Play extends Phaser.Scene {
             //change the badguy sprites
 
             let children1 = this.badguy1.getChildren();
-            for(var c = 0; c < children1.length; c++){
+            for (var c = 0; c < children1.length; c++) {
                 console.log(c);
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
-            for(var c = 0; c < children2.length; c++){
+            for (var c = 0; c < children2.length; c++) {
                 console.log(c);
                 children2[c].changeSprite();
             }
@@ -323,13 +335,13 @@ class Play extends Phaser.Scene {
             this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
-        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused );
+        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused);
 
         //console.log(this.repeatCount);
         //console.log(this.spawnInterval);
         console.log(this.levelTimeEvent.elapsed);
 
-        if(this.levelTimeEvent.elapsed >= 119900){
+        if (this.levelTimeEvent.elapsed >= 119900) {
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
             console.log('paused');
@@ -344,11 +356,49 @@ class Play extends Phaser.Scene {
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             console.log("Enemy hp: ", enemyHit.hp);
+            this.sound.play('BulletHit', { volume: 0.3 });
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
+                if (enemyHit.dimension == 3) {
+                    this.sound.play('ChaserDead', { volume: 0.3 });
+                    Chaserparticle.createEmitter({
+                        alpha: { start: 1, end: 0 },
+                        scale: { start: 0.1, end: 0.1 },
+                        //tint: { start: 0xff945e, end: 0xff945e },
+                        speed: 10,
+                        accelerationY: -30,
+                        angle: { min: -85, max: -95 },
+                        rotate: { min: -180, max: 180 },
+                        lifespan: { min: 500, max: 600 },
+                        frequency: 10,
+                        maxParticles: 5,
+                        x: enemyHit.x,
+                        y: enemyHit.y
+                    });
+                }
+
+                if (enemyHit.dimension == 2) {
+                    this.sound.play('ChargerDead', { volume: 0.3 });
+                    Chargerparticle.createEmitter({
+                        alpha: { start: 1, end: 0 },
+                        scale: { start: 0.1, end: 0.1 },
+                        //tint: { start: 0xff945e, end: 0xff945e },
+                        speed: 10,
+                        accelerationY: -30,
+                        angle: { min: -85, max: -95 },
+                        rotate: { min: -180, max: 180 },
+                        lifespan: { min: 500, max: 600 },
+                        frequency: 10,
+                        maxParticles: 5,
+                        x: enemyHit.x,
+                        y: enemyHit.y
+                    });
+                }
                 enemyHit.destroy();
             }
+
+            console.log(this);
 
             console.log(enemyHit);
 
@@ -435,17 +485,17 @@ class Play extends Phaser.Scene {
         this.cameras.main.scrollY = avgY;
     }
 
-    newLevel(){
-        this.Timeevent = this.time.addEvent({delay: this.spawnInterval, callback: this.spawnEnemy ,callbackScope: this, loop: true, repeat: this.repeatCount});
+    newLevel() {
+        this.Timeevent = this.time.addEvent({ delay: this.spawnInterval, callback: this.spawnEnemy, callbackScope: this, loop: true, repeat: this.repeatCount });
         this.levelCount++;
         this.spawnInterval /= 2;
         this.repeatCount *= 2;
     }
 
-    spawnEnemy(){
-        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'charger2', 0, 2).setOrigin(0.5, 0.5); 
+    spawnEnemy() {
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'charger2', 0, 2).setOrigin(0.5, 0.5);
         let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        
+
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
     }
@@ -455,10 +505,10 @@ class Play extends Phaser.Scene {
     }
 
     printTime() {
-            this.timescores += 0.1;
+        this.timescores += 0.1;
     }
 
-    Paused(){
+    Paused() {
         this.levelTimeEvent.paused = false;
         this.Timeevent.paused = false;
     }

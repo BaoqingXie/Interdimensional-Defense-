@@ -4,7 +4,7 @@ let gamewidth =  800;
 let gameheight =  600;
 
 let config = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
     width: gamewidth,
     height: gameheight,
 
@@ -31,6 +31,8 @@ let p1player;
 let r1reticle;
 let p1Bullets;
 let health;
+let Chaserparticle;
+let Chargerparticle;
 
 let moveKeys;
 let key1;
