@@ -267,7 +267,11 @@ class Play extends Phaser.Scene {
         health.x = p1player.x -23;
         health.y = p1player.y + 30;
         health.draw();
-        //wallhealth.draw();
+        
+        wallhealth.x = 170;
+        wallhealth.y = 450;
+        wallhealth.draw();
+    
 
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
@@ -317,7 +321,7 @@ class Play extends Phaser.Scene {
 
     playerHitCallback(playerHit, enemyHit) {
         // Reduce health of player
-        if (enemyHit.active === true && playerHit.active === true) {
+        if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
             playerHit.Hpchange(-5);
             health.decrease(5);
 

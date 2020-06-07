@@ -55,7 +55,7 @@ class Chaser extends Phaser.GameObjects.Sprite {
                 this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
-                this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
+                this.alpha = 0.66; // lower alpha to make it more clear they are invulnerable
             }
         }
     }
