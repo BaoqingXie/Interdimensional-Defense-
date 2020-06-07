@@ -28,21 +28,22 @@ class Charger extends Phaser.GameObjects.Sprite {
             this.play(this.defAnimKey); // play regular animation
         }else{
             this.play(this.hidAnimKey); // play the hidden animation
+            this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
         }
     }
 
     update() {
             // chargers run straight downwards (towards the wall)
         if(this.y < 400) {// WHATEVER PIXEL THE WALL IS AT
-                this.y += this.speed;
+            this.y += this.speed;
         }
         else{ 
             // attack animation? 
             if(!this.attacking){
                 this.damageTimer = this.scene.time.addEvent({
-                    delay: 500,
+                    delay: 1000,
                     callback: () => {
-                        if(this.active){ this.scene.wallhealth.decrease(2);}
+                        if(this.active){ wallhealth.decrease(4);}
                     },
                     loop: true
                 })
@@ -55,8 +56,10 @@ class Charger extends Phaser.GameObjects.Sprite {
         if(this.active){    
             if(this.dimension == dimensionManager.getdimension()){
                 this.play(this.defAnimKey); // play regular animation
+                this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
+                this.alpha = 0.7;
             }
         }
     }

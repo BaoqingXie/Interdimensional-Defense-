@@ -11,7 +11,7 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: true,
+            debug: false,
             gravity: {
                 y: 0
             }
@@ -31,6 +31,7 @@ let p1player;
 let r1reticle;
 let p1Bullets;
 let health;
+let wallhealth;
 
 let moveKeys;
 let key1;
