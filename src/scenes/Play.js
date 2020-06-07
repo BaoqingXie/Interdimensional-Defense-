@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('charger2', './assets/Sprites/charger2-0.png');
@@ -25,6 +26,18 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        this.anims.create({
+            key: 'wall-anim',
+            frames: this.anims.generateFrameNames('wall-atlas', {
+                start: 1,
+                end: 5,
+                zeroPad: 1,
+                prefix: 'wall-',
+            }),
+            frameRate: 6,
+            repeat: 0
+        });
 
         //create anims using the texture atlas
         this.anims.create({
@@ -188,7 +201,7 @@ class Play extends Phaser.Scene {
         });
 
         dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
-
+        
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
@@ -278,6 +291,8 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
+        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        //console.log(this.wall);
 
     }
 
@@ -292,7 +307,11 @@ class Play extends Phaser.Scene {
         health.x = p1player.x -23;
         health.y = p1player.y + 30;
         health.draw();
-        //wallhealth.draw();
+        
+        wallhealth.x = 170;
+        wallhealth.y = 450;
+        wallhealth.draw();
+    
 
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
@@ -364,7 +383,7 @@ class Play extends Phaser.Scene {
 
     playerHitCallback(playerHit, enemyHit) {
         // Reduce health of player
-        if (enemyHit.active === true && playerHit.active === true) {
+        if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
             playerHit.Hpchange(-5);
             health.decrease(5);
 
