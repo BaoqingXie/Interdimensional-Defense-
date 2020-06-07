@@ -202,6 +202,15 @@ class Play extends Phaser.Scene {
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
+        this.timescores = 0;
+        this.clock = this.time.addEvent({
+            delay: 1000,                // ms
+            callback: this.printTime,
+            //args: [],
+            callbackScope: this,
+            loop: true
+        });
+
         let smallConfig = {
             fontFamily: 'Comic Sans MS',
             fontSize: '20px',
@@ -216,10 +225,11 @@ class Play extends Phaser.Scene {
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
-        this.levelCount = 1;
+        this.levelCount = 0;
         this.spawnInterval = 5000;
-        this.repeatCount = 24;
-        this.levelTimeEvent = this.time.addEvent({delay: 120000, callback: this.newLevel ,callbackScope: this, loop: true, startAt:120000});
+        this.roundTime = 120000;
+        this.repeatCount = this.roundTime/this.spawnInterval;
+        this.levelTimeEvent = this.time.addEvent({delay: this.roundTime, callback: this.newLevel ,callbackScope: this, loop: true, startAt:this.roundTime});
         this.text = this.add.text(400, 100, [], smallConfig);
         this.text.setText('Level: ' + this.levelCount);
 
@@ -313,6 +323,20 @@ class Play extends Phaser.Scene {
             this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
+        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused );
+
+        //console.log(this.repeatCount);
+        //console.log(this.spawnInterval);
+        console.log(this.levelTimeEvent.elapsed);
+
+        if(this.levelTimeEvent.elapsed >= 119900){
+            this.levelTimeEvent.paused = true;
+            this.Timeevent.destroy();
+            console.log('paused');
+            setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
+        }
+
+
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -345,7 +369,6 @@ class Play extends Phaser.Scene {
 
 
             setTimeout(() => { p1player.reset(); }, 300);
-            //this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
 
         }
     }
@@ -413,11 +436,10 @@ class Play extends Phaser.Scene {
     }
 
     newLevel(){
-        this.text.setText('Level: ' + this.levelCount);
         this.Timeevent = this.time.addEvent({delay: this.spawnInterval, callback: this.spawnEnemy ,callbackScope: this, loop: true, repeat: this.repeatCount});
         this.levelCount++;
-        this.spawnInterval -= 1000;
-        this.repeatCount +=6;
+        this.spawnInterval /= 2;
+        this.repeatCount *= 2;
     }
 
     spawnEnemy(){
@@ -430,5 +452,14 @@ class Play extends Phaser.Scene {
 
     getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
+    }
+
+    printTime() {
+            this.timescores += 0.1;
+    }
+
+    Paused(){
+        this.levelTimeEvent.paused = false;
+        this.Timeevent.paused = false;
     }
 }
