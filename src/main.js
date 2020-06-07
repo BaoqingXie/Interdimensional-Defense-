@@ -34,6 +34,8 @@ let health;
 let Chaserparticle;
 let Chargerparticle;
 
+let wallhealth;
+
 let moveKeys;
 let key1;
 let key2;
