@@ -327,13 +327,13 @@ class Play extends Phaser.Scene {
 
             let children1 = this.badguy1.getChildren();
             for(var c = 0; c < children1.length; c++){
-                console.log(c);
+                //console.log(c);
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
             for(var c = 0; c < children2.length; c++){
-                console.log(c);
+                //console.log(c);
                 children2[c].changeSprite();
             }
 
@@ -351,7 +351,7 @@ class Play extends Phaser.Scene {
 
         //console.log(this.repeatCount);
         //console.log(this.spawnInterval);
-        console.log(this.levelTimeEvent.elapsed);
+        //console.log(this.levelTimeEvent.elapsed);
 
         if(this.levelTimeEvent.elapsed >= 119900){
             this.levelTimeEvent.paused = true;
@@ -368,7 +368,7 @@ class Play extends Phaser.Scene {
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             
-            console.log("Enemy hp: ", enemyHit.hp);
+            //console.log("Enemy hp: ", enemyHit.hp);
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
@@ -454,8 +454,8 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        console.log(avgX);
-        console.log(avgY);
+        //console.log(avgX);
+        //console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
@@ -468,8 +468,8 @@ class Play extends Phaser.Scene {
     }
 
     spawnEnemy(){
-        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, 2).setOrigin(0.5, 1); 
-        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 1); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
