@@ -202,14 +202,26 @@ class Play extends Phaser.Scene {
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
+        let smallConfig = {
+            fontFamily: 'Comic Sans MS',
+            fontSize: '20px',
+            color: '#808000',
+            align: 'left',
+            fixedWidth: 0,
+        }
 
-        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+        //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
 
+        this.badguy1 = this.physics.add.group({ runChildUpdate: true });
+        this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
-
-
-
+        this.levelCount = 1;
+        this.spawnInterval = 5000;
+        this.repeatCount = 24;
+        this.levelTimeEvent = this.time.addEvent({delay: 120000, callback: this.newLevel ,callbackScope: this, loop: true, startAt:120000});
+        this.text = this.add.text(400, 100, [], smallConfig);
+        this.text.setText('Level: ' + this.levelCount);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -233,8 +245,8 @@ class Play extends Phaser.Scene {
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
-                this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -253,6 +265,7 @@ class Play extends Phaser.Scene {
                 r1reticle.movement(p1player, pointer.movementX, pointer.movementY);
             }
         }, this);
+
 
     }
 
@@ -277,21 +290,29 @@ class Play extends Phaser.Scene {
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
-            this.badguy1.changeSprite();
-            this.badguy2.changeSprite();
+
+            let children1 = this.badguy1.getChildren();
+            for(var c = 0; c < children1.length; c++){
+                console.log(c);
+                children1[c].changeSprite();
+            }
+
+            let children2 = this.badguy2.getChildren();
+            for(var c = 0; c < children2.length; c++){
+                console.log(c);
+                children2[c].changeSprite();
+            }
+
         }
 
         //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
         //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
 
         if (p1player.invincibility == false) {
-            this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
-            this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy1.getChildren(), this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
-        //update badguys
-        this.badguy1.update();
-        this.badguy2.update();
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -389,5 +410,25 @@ class Play extends Phaser.Scene {
         console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
+    }
+
+    newLevel(){
+        this.text.setText('Level: ' + this.levelCount);
+        this.Timeevent = this.time.addEvent({delay: this.spawnInterval, callback: this.spawnEnemy ,callbackScope: this, loop: true, repeat: this.repeatCount});
+        this.levelCount++;
+        this.spawnInterval -= 1000;
+        this.repeatCount +=6;
+    }
+
+    spawnEnemy(){
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'charger2', 0, 2).setOrigin(0.5, 0.5); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        
+        this.badguy1.add(charger);
+        this.badguy2.add(chaser);
+    }
+
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 }
