@@ -30,7 +30,7 @@ let dimensionManager;
 let p1player;
 let r1reticle;
 let p1Bullets;
-let health;
+let playerhealth;
 let wallhealth;
 
 let moveKeys;

@@ -201,18 +201,25 @@ class Play extends Phaser.Scene {
         });
 
         dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
+      
+      
+      
+        //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
+      
         this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
-        
+
+        playerhealth = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
+
+
+      
+      
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
-
-        //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
-        health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
-        
-
+      
+      
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
@@ -306,14 +313,15 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        health.x = p1player.x -23;
-        health.y = p1player.y + 30;
-        health.draw();
+
+        playerhealth.x = p1player.x - 23;
+        playerhealth.y = p1player.y + 30;
+        playerhealth.draw();
         
         wallhealth.x = 170;
         wallhealth.y = 450;
         wallhealth.draw();
-    
+
 
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
@@ -387,7 +395,7 @@ class Play extends Phaser.Scene {
         // Reduce health of player
         if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
             playerHit.Hpchange(-5);
-            health.decrease(5);
+            playerhealth.decrease(5);
 
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
