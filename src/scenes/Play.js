@@ -18,12 +18,21 @@ class Play extends Phaser.Scene {
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
-
+        this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
         // load animation/sprite atlas
 
     }
 
     create() {
+
+        //play and loop BGM
+        /*const BGM = this.sound.add('BGM', {
+            volume: 0.4,
+            loop: true
+        });
+        sound.play();*/
+
+        this.sound.play('BGM', { volume: 0.4, loop : true});
 
         this.anims.create({
             key: 'wall-anim',
