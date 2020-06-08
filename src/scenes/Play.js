@@ -397,7 +397,7 @@ class Play extends Phaser.Scene {
            
             this.cameras.main.shake(250,0.0025);
 
-            setTimeout(() => { p1player.reset(); }, 600);
+            setTimeout(() => { p1player.reset(); }, 650);
 
         }
     }
