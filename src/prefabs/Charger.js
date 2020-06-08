@@ -62,7 +62,7 @@ class Charger extends Phaser.GameObjects.Sprite {
                 this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
-                this.alpha = 0.66;
+                this.alpha = 0.7;
             }
         }
     }
