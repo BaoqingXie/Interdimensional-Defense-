@@ -204,7 +204,7 @@ class Play extends Phaser.Scene {
         
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
-        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
+        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0, 0);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
