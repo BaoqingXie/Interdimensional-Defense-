@@ -13,17 +13,26 @@ class Play extends Phaser.Scene {
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
 
-        this.load.image('bg1', './assets/Backgrounds/DimensionEarth.png');
-        this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
+        this.load.image('bg1', './assets/Backgrounds/DimensionRed.png');
+        this.load.image('bg2', './assets/Backgrounds/DimensionGreen.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
-
+        this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
         // load animation/sprite atlas
 
     }
 
     create() {
+
+        //play and loop BGM
+        /*const BGM = this.sound.add('BGM', {
+            volume: 0.4,
+            loop: true
+        });
+        sound.play();*/
+
+        this.sound.play('BGM', { volume: 0.4, loop : true});
 
         this.anims.create({
             key: 'wall-anim',
@@ -198,13 +207,13 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
+        dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0.5,0.5);
         this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
-        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0, 0);
+        p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
