@@ -24,7 +24,7 @@ class Play extends Phaser.Scene {
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
         this.load.audio('laser_hit', './assets/SoundEffects/laser_hit.mp3');
-        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
+        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.mp3');
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
         this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
 
@@ -495,25 +495,25 @@ class Play extends Phaser.Scene {
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
-                if (enemyHit.dimension == 3) {
-                    this.sound.play('ChaserDead', { volume: 0.3 });
-                    Chaserparticle.createEmitter({
-                        alpha: { start: 1, end: 0 },
-                        scale: { start: 0.1, end: 0.1 },
-                        //tint: { start: 0xff945e, end: 0xff945e },
-                        speed: 10,
-                        accelerationY: -30,
-                        angle: { min: -85, max: -95 },
-                        rotate: { min: -180, max: 180 },
-                        lifespan: { min: 500, max: 600 },
-                        frequency: 10,
-                        maxParticles: 5,
-                        x: enemyHit.x,
-                        y: enemyHit.y
-                    });
-                }
+                // if (enemyHit.dimension == 1) {
+                //     this.sound.play('ChaserDead', { volume: 0.3 });
+                //     Chaserparticle.createEmitter({
+                //         alpha: { start: 1, end: 0 },
+                //         scale: { start: 0.1, end: 0.1 },
+                //         //tint: { start: 0xff945e, end: 0xff945e },
+                //         speed: 10,
+                //         accelerationY: -30,
+                //         angle: { min: -85, max: -95 },
+                //         rotate: { min: -180, max: 180 },
+                //         lifespan: { min: 500, max: 600 },
+                //         frequency: 10,
+                //         maxParticles: 5,
+                //         x: enemyHit.x,
+                //         y: enemyHit.y
+                //     });
+                // }
 
-                if (enemyHit.dimension == 2) {
+                // if (enemyHit.dimension == 2) {
                     this.sound.play('ChargerDead', { volume: 0.3 });
                     Chargerparticle.createEmitter({
                         alpha: { start: 1, end: 0 },
@@ -529,7 +529,7 @@ class Play extends Phaser.Scene {
                         x: enemyHit.x,
                         y: enemyHit.y
                     });
-                }
+                // }
                 enemyHit.destroy();
 
                 p1player.money += 100;
