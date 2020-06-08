@@ -327,13 +327,13 @@ class Play extends Phaser.Scene {
 
             let children1 = this.badguy1.getChildren();
             for(var c = 0; c < children1.length; c++){
-                console.log(c);
+                //console.log(c);
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
             for(var c = 0; c < children2.length; c++){
-                console.log(c);
+                //console.log(c);
                 children2[c].changeSprite();
             }
         }
@@ -350,7 +350,7 @@ class Play extends Phaser.Scene {
 
         //console.log(this.repeatCount);
         //console.log(this.spawnInterval);
-        console.log(this.levelTimeEvent.elapsed);
+        //console.log(this.levelTimeEvent.elapsed);
 
         if(this.levelTimeEvent.elapsed >= 119900){
             this.levelTimeEvent.paused = true;
@@ -467,8 +467,8 @@ class Play extends Phaser.Scene {
     }
 
     spawnEnemy(){
-        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, 2).setOrigin(0.5, 1); 
-        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 1); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
