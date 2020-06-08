@@ -7,6 +7,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.setDrag(drag,drag);
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
+        this.play('player-idle');
         this.hp = 100;
         this.invincibility = false;
         this.money = 0;
@@ -14,7 +15,6 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     movement(scene) {
-
         scene.input.keyboard.on('keydown_W', ()=> {
             this.body.setAccelerationY(-acceleration);
             this.play('player-walk');
