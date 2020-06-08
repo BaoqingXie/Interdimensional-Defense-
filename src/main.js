@@ -56,7 +56,7 @@ let acceleration = 1500;
 
 //gun attributes
 let LaserDamage = 1;
-let FireRate = 800;
+let FireRate = 400;
 
 //chasers
 let chaserSpeed = 1;
