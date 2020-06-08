@@ -567,7 +567,7 @@ class Play extends Phaser.Scene {
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
            
-            this.cameras.main.shake(250,0.0025);
+            this.cameras.main.shake(200,0.0015);
 
             setTimeout(() => { p1player.reset(); }, 650);
 
