@@ -13,10 +13,17 @@ class Play extends Phaser.Scene {
         this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
         this.load.image('explode2', './assets/Particle/12_nebula_spritesheet.png');
 
+
         this.load.image('ShopInterface', './assets/Sprites/ShopInterface.png');
+
         this.load.image('FireRate', './assets/Sprites/FireRate.png');
         this.load.image('LaserDamage', './assets/Sprites/Laser-Damage.png');
         this.load.image('Speed', './assets/Sprites/Speed.png');
+
+        this.load.image('FireRate_disabled', './assets/Sprites/FireRate_disabled.png');
+        this.load.image('LaserDamage_disabled', './assets/Sprites/Damage_disabled.png');
+        this.load.image('Speed_disabled', './assets/Sprites/Speed_disabled.png');
+
         this.load.image('FireRate_price', './assets/Sprites/firerate_price.png');
         this.load.image('LaserDamage_price', './assets/Sprites/damage_price.png');
         this.load.image('Speed_price', './assets/Sprites/speed_price.png');
@@ -50,31 +57,42 @@ class Play extends Phaser.Scene {
 
         let textSpacer = 35;
         let yoffset = 30;
-        this.ShopInterface = this.add.image(gamewidth/2, gameheight/2, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen).setOrigin(0.5,0.5);
-        this.LaserDamage = this.add.image(gamewidth/2 - 80, gameheight/2 - textSpacer - yoffset, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.FireRate = this.add.image(gamewidth/2 - 90, gameheight/2 + textSpacer - yoffset, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.Speed = this.add.image(gamewidth/2 - 72, gameheight/2 - yoffset, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
 
-        this.LaserDamagePrice = this.add.sprite(gamewidth/2, gameheight/2 - textSpacer - yoffset, 'LaserDamage_price', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.SpeedPrice = this.add.sprite(gamewidth/2 - 10, gameheight/2 - yoffset, 'Speed_price', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.FireRatePrice = this.add.sprite(gamewidth/2, gameheight/2 + textSpacer - yoffset, 'FireRate_price', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.ShopInterface = this.add.image(gamewidth/2, gameheight/2, 'ShopInterface').setScale(1.2, 1.2).setAlpha(this.isShopOpen).setOrigin(0.5,0.5);
+        this.ShopInterface.setDepth(2);
 
-        this.Add = this.add.sprite(gamewidth/2 + 70, gameheight/2 - textSpacer - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add2 = this.add.sprite(gamewidth/2 + 70, gameheight/2 - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add3 = this.add.sprite(gamewidth/2 + 70, gameheight/2 + textSpacer - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-
-
-        this.Add.setDepth(3);
-        this.Add2.setDepth(3);
-        this.Add3.setDepth(3);
-
+        this.LaserDamage = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.Speed = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
         this.LaserDamage.setDepth(3);
         this.Speed.setDepth(3);
         this.FireRate.setDepth(3);
+
+        this.LaserDamage_disabled = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRate_disabled = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.Speed_disabled = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.LaserDamage_disabled.setDepth(3);
+        this.Speed_disabled.setDepth(3);
+        this.FireRate_disabled.setDepth(3);
+        this.LaserDamage_ismaxed = false;
+        this.Speed_ismaxed = false;
+        this.FireRate_ismaxed = false;
+
+        this.LaserDamagePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 - textSpacer - yoffset, 'LaserDamage_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.SpeedPrice = this.add.sprite(gamewidth/2 + 9, gameheight/2 - yoffset, 'Speed_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRatePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 + textSpacer - yoffset, 'FireRate_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
         this.LaserDamagePrice.setDepth(3);
         this.SpeedPrice.setDepth(3);
         this.FireRatePrice.setDepth(3);
-        this.ShopInterface.setDepth(2);
+
+        this.Add = this.add.sprite(gamewidth/2 + 90, gameheight/2 - textSpacer - yoffset, 'Add', 1).setScale(0.5, 0.5).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(gamewidth/2 + 90, gameheight/2 - yoffset, 'Add', 1).setScale(0.5, 0.5).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(gamewidth/2 + 90, gameheight/2 + textSpacer - yoffset, 'Add', 1).setScale(0.5, 0.5).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add.setDepth(3);
+        this.Add2.setDepth(3);
+        this.Add3.setDepth(3);
+        
+        
 
         this.input.keyboard.on('keydown_B', () => {
             if (this.isShopOpen == 0) {
@@ -83,11 +101,30 @@ class Play extends Phaser.Scene {
                 this.isShopOpen = 0;
             }
 
+            
+            this.Add.setFrame(1);
+            this.Add2.setFrame(1);
+            this.Add3.setFrame(1);
             this.shopSelection = 0;
 
-            this.LaserDamage.setAlpha(this.isShopOpen);
-            this.Speed.setAlpha(this.isShopOpen);
-            this.FireRate.setAlpha(this.isShopOpen);
+            if (this.LaserDamage_ismaxed){
+                this.LaserDamage_disabled.setAlpha(this.isShopOpen);
+            }
+            else {
+                this.LaserDamage.setAlpha(this.isShopOpen);
+            }
+            if (this.Speed_ismaxed){
+                this.Speed_disabled.setAlpha(this.isShopOpen);
+            }
+            else {
+                this.Speed.setAlpha(this.isShopOpen);
+            }
+            if (this.FireRate_ismaxed){
+                this.FireRate_disabled.setAlpha(this.isShopOpen);
+            }
+            else {
+                this.FireRate.setAlpha(this.isShopOpen);
+            }
             this.ShopInterface.setAlpha(this.isShopOpen);
             this.LaserDamagePrice.setAlpha(this.isShopOpen);
             this.SpeedPrice.setAlpha(this.isShopOpen);
@@ -153,12 +190,22 @@ class Play extends Phaser.Scene {
                 if (LaserDamage < 3 && p1player.money >= damage_price) {
                     LaserDamage += 1;
                     p1player.money -= damage_price;
+                    if (LaserDamage >= 3){
+                        this.LaserDamage_ismaxed = true;
+                        this.LaserDamage.setAlpha(0);
+                        this.LaserDamage_disabled.setAlpha(this.isShopOpen);
+                    }
                 }
             }
             if (this.shopSelection == 2 && p1player.money >= firerate_price) {
                 if (FireRate > 200) {
                     FireRate -= 200;
                     p1player.money -= firerate_price;
+                    if (FireRate <= 200){
+                        this.FireRate_ismaxed = true;
+                        this.FireRate.setAlpha(0);
+                        this.FireRate_disabled.setAlpha(this.isShopOpen);
+                    }
                 }
             }
             if (this.shopSelection == 1 && p1player.money >= speed_price) {
@@ -167,6 +214,11 @@ class Play extends Phaser.Scene {
                     maxSpeed += 15;
                     drag += 100;
                     p1player.money -= speed_price;
+                    if (acceleration >= 2600){
+                        this.Speed_ismaxed = true;
+                        this.Speed.setAlpha(0);
+                        this.Speed_disabled.setAlpha(this.isShopOpen);
+                    }
                 }
             }
         });
@@ -184,8 +236,8 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        this.playbgm = this.sound.add('BGM', { volume: 0.35, loop : true});
-        this.playbgm.play();
+        this.bgm = this.sound.add('BGM', { volume: 0.35, loop: true });
+        this.bgm.play();
 
 
         this.anims.create({
@@ -365,7 +417,7 @@ class Play extends Phaser.Scene {
 
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
       
-        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(2.2, 0.8);
+        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.145, 1.06);
         wallhealth = new HealthBar(this, gamewidth/2 +500, 10, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
 
         
@@ -489,6 +541,7 @@ class Play extends Phaser.Scene {
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.4 });
+            this.cameras.main.shake(100,0.002);
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
@@ -522,13 +575,19 @@ class Play extends Phaser.Scene {
         gametime = time;
 
         if (this.levelTimeEvent.elapsed >= 119900) {
+            this.bgm.pause();
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
             this.playbgm.pause();
             setTimeout(() => { this.levelTimeEvent.paused = false;this.playbgm.resume(); }, 30000);
         }
 
-
+          if(p1player.hp <= 0 || wallhealth.value <=0){
+            this.badguy1.clear();
+            this.badguy2.clear();
+            this.bgm.stop();
+            this.scene.start("DealthScene");
+        }
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
