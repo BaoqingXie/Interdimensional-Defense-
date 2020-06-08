@@ -136,7 +136,6 @@ class Play extends Phaser.Scene {
 
         this.input.keyboard.on('keydown_DOWN', () => {
             if (this.isShopOpen > 0) {
-                console.log(this.shopSelection);
                 this.Add.setFrame(1);
                 this.Add2.setFrame(1);
                 this.Add3.setFrame(1);
@@ -159,7 +158,6 @@ class Play extends Phaser.Scene {
 
         this.input.keyboard.on('keydown_UP', () => {
             if (this.isShopOpen > 0) {
-                console.log(this.shopSelection);
                 this.Add.setFrame(1);
                 this.Add2.setFrame(1);
                 this.Add3.setFrame(1);
@@ -580,20 +578,16 @@ class Play extends Phaser.Scene {
             this.bgm.pause();
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
-            console.log('paused');
-            setTimeout(() => { 
-                this.levelTimeEvent.paused = false; 
-                this.bgm.resume(); 
-            }, 30000);
+            this.playbgm.pause();
+            setTimeout(() => { this.levelTimeEvent.paused = false;this.playbgm.resume(); }, 30000);
         }
 
-        if(p1player.hp <= 0 || wallhealth.value <=0){
+          if(p1player.hp <= 0 || wallhealth.value <=0){
             this.badguy1.clear();
             this.badguy2.clear();
             this.bgm.stop();
             this.scene.start("DealthScene");
         }
-    
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -602,7 +596,6 @@ class Play extends Phaser.Scene {
 
             enemyHit.hp = enemyHit.hp - LaserDamage;
 
-            console.log("Enemy hp: ", enemyHit.hp);
             this.sound.play('laser_hit', { volume: 0.4 });
 
 
@@ -698,11 +691,9 @@ class Play extends Phaser.Scene {
 
         // Ensures reticle cannot be moved offscreen
         if (distX > gamewidth) {
-            console.log('fix');
             reticle.x = player.x + gamewidth;
         }
         else if (distX < -gamewidth) {
-            console.log('fix');
             reticle.x = player.x - gamewidth;
         }
 
@@ -717,8 +708,6 @@ class Play extends Phaser.Scene {
             // Place reticle on perimeter of circle on line intersecting player & reticle
             var scale = distBetween / radius;
 
-            console.log('fix')
-
             reticle.x = player.x + (reticle.x - player.x) / scale;
             reticle.y = player.y + (reticle.y - player.y) / scale;
         }
@@ -728,8 +717,6 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        //console.log(avgX);
-        //console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
