@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('charger2', './assets/Sprites/charger2-0.png');
@@ -25,6 +26,18 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        this.anims.create({
+            key: 'wall-anim',
+            frames: this.anims.generateFrameNames('wall-atlas', {
+                start: 1,
+                end: 5,
+                zeroPad: 1,
+                prefix: 'wall-',
+            }),
+            frameRate: 6,
+            repeat: 0
+        });
 
         //create anims using the texture atlas
         this.anims.create({
@@ -188,7 +201,9 @@ class Play extends Phaser.Scene {
         });
 
         dimensionManager = new Dimension(this,0,0,'bg3').setScale(1,1).setOrigin(0,0);
-
+        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
@@ -196,20 +211,44 @@ class Play extends Phaser.Scene {
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
-        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
+        this.timescores = 0;
+        this.clock = this.time.addEvent({
+            delay: 1000,                // ms
+            callback: this.printTime,
+            //args: [],
+            callbackScope: this,
+            loop: true
+        });
 
-        this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        this.badguy2 = new Charger(this, gamewidth / 2 + 100, 300, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+
+        let smallConfig = {
+            fontFamily: 'Comic Sans MS',
+            fontSize: '20px',
+            color: '#808000',
+            align: 'left',
+            fixedWidth: 0,
+        }
 
 
+        //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
+        
+        this.badguy1 = this.physics.add.group({ runChildUpdate: true });
+        this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
-
-
+        this.levelCount = 0;
+        this.spawnInterval = 5000;
+        this.roundTime = 120000;
+        this.repeatCount = this.roundTime/this.spawnInterval;
+        this.levelTimeEvent = this.time.addEvent({delay: this.roundTime, callback: this.newLevel ,callbackScope: this, loop: true, startAt:this.roundTime});
+        this.text = this.add.text(400, 100, [], smallConfig);
+        this.text.setText('Level: ' + this.levelCount);
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -233,8 +272,8 @@ class Play extends Phaser.Scene {
 
             if (bullet) {
                 bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                this.physics.add.collider(this.badguy1, bullet, this.enemyHitCallback);
-                this.physics.add.collider(this.badguy2, bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback);
+                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback);
             }
         }, this);
 
@@ -254,6 +293,9 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
+        
+        //console.log(this.wall);
+
     }
 
     update() {
@@ -267,7 +309,11 @@ class Play extends Phaser.Scene {
         health.x = p1player.x -23;
         health.y = p1player.y + 30;
         health.draw();
-        //wallhealth.draw();
+        
+        wallhealth.x = 170;
+        wallhealth.y = 450;
+        wallhealth.draw();
+    
 
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
@@ -278,21 +324,43 @@ class Play extends Phaser.Scene {
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
-            this.badguy1.changeSprite();
-            this.badguy2.changeSprite();
+
+            let children1 = this.badguy1.getChildren();
+            for(var c = 0; c < children1.length; c++){
+                //console.log(c);
+                children1[c].changeSprite();
+            }
+
+            let children2 = this.badguy2.getChildren();
+            for(var c = 0; c < children2.length; c++){
+                //console.log(c);
+                children2[c].changeSprite();
+            }
+
         }
 
         //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
         //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
 
         if (p1player.invincibility == false) {
-            this.physics.overlap(p1player, this.badguy1, this.playerHitCallback, null, this);
-            this.physics.overlap(p1player, this.badguy2, this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy1.getChildren(), this.playerHitCallback, null, this);
+            this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
-        //update badguys
-        this.badguy1.update();
-        this.badguy2.update();
+        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused );
+
+        //console.log(this.repeatCount);
+        //console.log(this.spawnInterval);
+        //console.log(this.levelTimeEvent.elapsed);
+
+        if(this.levelTimeEvent.elapsed >= 119900){
+            this.levelTimeEvent.paused = true;
+            this.Timeevent.destroy();
+            console.log('paused');
+            setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
+        }
+
+
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
@@ -300,7 +368,7 @@ class Play extends Phaser.Scene {
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             
-            console.log("Enemy hp: ", enemyHit.hp);
+            //console.log("Enemy hp: ", enemyHit.hp);
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
@@ -317,7 +385,7 @@ class Play extends Phaser.Scene {
 
     playerHitCallback(playerHit, enemyHit) {
         // Reduce health of player
-        if (enemyHit.active === true && playerHit.active === true) {
+        if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
             playerHit.Hpchange(-5);
             health.decrease(5);
 
@@ -326,7 +394,6 @@ class Play extends Phaser.Scene {
 
 
             setTimeout(() => { p1player.reset(); }, 300);
-            //this.timedEvent = this.time.delayedCall(5000, p1player.reset(), [], this);
 
         }
     }
@@ -387,9 +454,37 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        console.log(avgX);
-        console.log(avgY);
+        //console.log(avgX);
+        //console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
+    }
+
+    newLevel(){
+        this.Timeevent = this.time.addEvent({delay: this.spawnInterval, callback: this.spawnEnemy ,callbackScope: this, loop: true, repeat: this.repeatCount});
+        this.levelCount++;
+        this.spawnInterval /= 2;
+        this.repeatCount *= 2;
+    }
+
+    spawnEnemy(){
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 1); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 3)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+        
+        this.badguy1.add(charger);
+        this.badguy2.add(chaser);
+    }
+
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    printTime() {
+            this.timescores += 0.1;
+    }
+
+    Paused(){
+        this.levelTimeEvent.paused = false;
+        this.Timeevent.paused = false;
     }
 }
