@@ -20,7 +20,7 @@ class Play extends Phaser.Scene {
         this.load.image('ShopInterface', './assets/Sprites/ShopInterface.png');
 
         this.load.image('bg1', './assets/Backgrounds/DimensionRed.png');
-        this.load.image('bg2', './assets/Backgrounds/DimensionGreen.png');
+        this.load.image('bg2', './assets/Backgrounds/DimensionGreen1.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
