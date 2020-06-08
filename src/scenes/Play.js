@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
         });
         sound.play();*/
 
-        this.sound.play('BGM', { volume: 0.4, loop : true});
+        this.sound.play('BGM', { volume: 0.35, loop : true});
 
         this.anims.create({
             key: 'wall-anim',
