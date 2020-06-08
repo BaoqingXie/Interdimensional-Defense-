@@ -616,9 +616,6 @@ class Play extends Phaser.Scene {
         if (distBetween > radius) {
             // Place reticle on perimeter of circle on line intersecting player & reticle
             var scale = distBetween / radius;
-
-            console.log('fix')
-
             reticle.x = player.x + (reticle.x - player.x) / scale;
             reticle.y = player.y + (reticle.y - player.y) / scale;
         }
@@ -645,7 +642,6 @@ class Play extends Phaser.Scene {
     spawnEnemy(){
         let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 1); 
         let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-
 
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
