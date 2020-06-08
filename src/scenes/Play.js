@@ -530,8 +530,9 @@ class Play extends Phaser.Scene {
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
             console.log('paused');
-            setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
+            setTimeout(() => { this.levelTimeEvent.paused = false; }, 30000);
         }
+
 
         if(p1player.hp <= 0){
             this.badguy1.destroy();
@@ -540,12 +541,14 @@ class Play extends Phaser.Scene {
             this.scene.start("DealthScene");
         }
 
+
         if(wallhealth.value <= 0){
             this.badguy1.destroy();
             this.badguy2.destroy();
 
             this.scene.start("DealthScene");
         }
+
 
     }
 
