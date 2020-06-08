@@ -24,7 +24,7 @@ class Play extends Phaser.Scene {
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
         this.load.audio('laser_hit', './assets/SoundEffects/laser_hit.mp3');
-        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
+        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.mp3');
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
         this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
 
