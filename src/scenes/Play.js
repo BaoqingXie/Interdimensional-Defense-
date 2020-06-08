@@ -442,6 +442,7 @@ class Play extends Phaser.Scene {
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.4 });
+            this.cameras.main.shake(50,0.004);
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
@@ -584,11 +585,9 @@ class Play extends Phaser.Scene {
 
         // Ensures reticle cannot be moved offscreen
         if (distX > gamewidth) {
-            console.log('fix');
             reticle.x = player.x + gamewidth;
         }
         else if (distX < -gamewidth) {
-            console.log('fix');
             reticle.x = player.x - gamewidth;
         }
 
@@ -602,9 +601,6 @@ class Play extends Phaser.Scene {
         if (distBetween > radius) {
             // Place reticle on perimeter of circle on line intersecting player & reticle
             var scale = distBetween / radius;
-
-            console.log('fix')
-
             reticle.x = player.x + (reticle.x - player.x) / scale;
             reticle.y = player.y + (reticle.y - player.y) / scale;
         }
@@ -614,8 +610,7 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        //console.log(avgX);
-        //console.log(avgY);
+
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
@@ -631,7 +626,6 @@ class Play extends Phaser.Scene {
     spawnEnemy(){
         let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 1); 
         let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-
 
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
