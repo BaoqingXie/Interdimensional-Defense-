@@ -335,6 +335,7 @@ class Play extends Phaser.Scene {
                 //console.log(c);
                 children2[c].changeSprite();
             }
+
         }
 
         //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
@@ -366,7 +367,7 @@ class Play extends Phaser.Scene {
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
             enemyHit.hp = enemyHit.hp - 1;
             
-            console.log("Enemy hp: ", enemyHit.hp);
+            //console.log("Enemy hp: ", enemyHit.hp);
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
@@ -452,8 +453,8 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        console.log(avgX);
-        console.log(avgY);
+        //console.log(avgX);
+        //console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
