@@ -392,9 +392,7 @@ class Play extends Phaser.Scene {
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.timescores = 0;
-        
 
-   
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
@@ -526,7 +524,11 @@ class Play extends Phaser.Scene {
         }
 
         if(p1player.hp <= 0){
-            this.stop();
+            this.badguy1.destroy();
+            this.badguy2.destroy();
+
+            this.scene.remove();
+            this.scene.start("DealthScene");
         }
 
 
