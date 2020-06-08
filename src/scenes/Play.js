@@ -43,14 +43,14 @@ class Play extends Phaser.Scene {
         this.shopSelection = 0;
 
         let textSpacer = 32;
-        this.ShopInterface = this.add.image(320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
-        this.LaserDamage = this.add.image(210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.speed = this.add.image(210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.FireRate = this.add.image(210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.ShopInterface = this.add.image(this, 320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
+        this.LaserDamage = this.add.image(this, 210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.speed = this.add.image(this, 210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(this, 210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
 
-        this.Add = this.add.sprite(400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add2 = this.add.sprite(400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add3 = this.add.sprite(400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add = this.add.sprite(this, 400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(this, 400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(this, 400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
 
 
         this.Add.setDepth(3);
@@ -146,7 +146,7 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        this.sound.play('BGM', { volume: 0.35, loop : true});
+        this.playbgm = this.sound.play('BGM', { volume: 0.35, loop : true});
 
 
         this.anims.create({
@@ -478,8 +478,8 @@ class Play extends Phaser.Scene {
         if(p1player.hp <= 0){
             this.badguy1.destroy();
             this.badguy2.destroy();
-
-            this.scene.remove();
+            this.playbgm.stop();
+            //this.scene.remove();
             this.scene.start("DealthScene");
         }
 

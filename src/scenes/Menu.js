@@ -19,8 +19,8 @@ class Menu extends Phaser.Scene {
         game.input.mouse.releasePointerLock();
 
         //play and loop BGM
-        let menubgm = this.sound.add('menubgm', { volume: 0.3, loop: true });
-        menubgm.play();
+        this.menubgm = this.sound.add('menubgm', { volume: 0.3, loop: true });
+        this.menubgm.play();
 
         let menuconfig = {
             fontFamily: 'Courier New',
@@ -65,27 +65,25 @@ class Menu extends Phaser.Scene {
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
             this.sound.play('Selection', { volume: 0.25 });
             if (gameObject === this.Start) {
-                this.scene.start("playScene");
                 this.menubgm.stop();
                 this.BGMisPlaying = false;
+                this.scene.start("playScene");
             } else if (gameObject === this.Instruction) {
-                this.scene.start("InstructionScene");
+                this.scene.switch("InstructionScene");
             } else {
-
-
-                this.scene.start("CreditsScene");
+                this.scene.switch("CreditsScene");
             }
         });
 
         this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
         // bgm
-        if (!this.BGMisPlaying) {
-            this.menubgm = this.sound.add('menubgm');
-            this.menubgm.loop = true;
-            this.menubgm.volume = 0.7;
-            this.menubgm.play();
-            this.BGMisPlaying = true;
-        }
+        // if (!this.BGMisPlaying) {
+        //     this.menubgm = this.sound.add('menubgm');
+        //     this.menubgm.loop = true;
+        //     this.menubgm.volume = 0.7;
+        //     this.menubgm.play();
+        //     this.BGMisPlaying = true;
+        // }
 
 
     }
