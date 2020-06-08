@@ -5,12 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
-        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
+        this.load.atlas('wall-atlas', './assets/Sprites/wall.png', './assets/Sprites/wall.json');
 
-
-        this.load.image('Player', './assets/Sprites/player1-0.png');
-        this.load.image('charger2', './assets/Sprites/charger2-0.png');
-        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
 
@@ -196,7 +192,8 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        this.sound.play('BGM', { volume: 0.35, loop : true});
+        this.playbgm = this.sound.add('BGM', { volume: 0.35, loop : true});
+        this.playbgm.play();
 
 
         this.anims.create({
@@ -406,18 +403,26 @@ class Play extends Phaser.Scene {
         this.repeatCount = this.roundTime / this.spawnInterval;
         this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
 
+
+
         let smallConfig = {
             fontFamily: 'Courier New',
-            fontSize: '30px',
+            fontSize: '35px',
             color: '#FFFFFF',
             align: 'left',
             fixedWidth: 0,
         }
-        this.text = this.add.text(50, 10, [], smallConfig);
-        this.text2 = this.add.text(1100, 10, [], smallConfig);
-        this.text3 = this.add.text(550, 10,[], smallConfig)
-        this.text.setText('Wave: ' + this.levelCount);
-        this.text3.setText('Wall: ');
+
+        this.wave_ui = this.add.text(50, 20, [], smallConfig);
+        this.credits_ui = this.add.text(50, 60, [], smallConfig);
+        this.wall_ui = this.add.text(400, 20,[], smallConfig)
+        this.wall_ui.setText('Wall ');
+        this.wave_ui.setDepth(3);
+        this.credits_ui.setDepth(3);
+        this.wall_ui.setDepth(3);
+
+
+
 
         moveKeys = this.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -483,8 +488,8 @@ class Play extends Phaser.Scene {
         health.y = p1player.y + 30;
         health.draw();
         
-        wallhealth.x = 650;
-        wallhealth.y = 15;
+        wallhealth.x = 500;
+        wallhealth.y = 26;
         wallhealth.draw();
     
 
@@ -519,8 +524,8 @@ class Play extends Phaser.Scene {
             this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
-        this.text.setText('Wave: ' + this.levelCount);
-        this.text2.setText('Money: ' + p1player.money)
+        this.wave_ui.setText('   Wave ' + this.levelCount);
+        this.credits_ui.setText('Credits ' + p1player.money)
         
 
 
@@ -533,10 +538,10 @@ class Play extends Phaser.Scene {
             setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
         }
 
-        if(p1player.hp <= 0){
+        if(p1player.hp <= 0 || wallhealth.value <=0){
             this.badguy1.destroy();
             this.badguy2.destroy();
-
+            this.playbgm.stop();
             this.scene.start("DealthScene");
         }
 
