@@ -12,18 +12,140 @@ class Play extends Phaser.Scene {
         this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
+        this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
+        this.load.image('explode2', './assets/Particle/12_nebula_spritesheet.png');
+        this.load.image('FireRate', './assets/Sprites/FireRate.png');
+        this.load.image('LaserDamage', './assets/Sprites/Laser-Damage.png');
+        this.load.image('Speed', './assets/Sprites/Speed.png');
+        this.load.image('ShopInterface', './assets/Sprites/ShopInterface.png');
 
         this.load.image('bg1', './assets/Backgrounds/DimensionRed.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionGreen.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
+
+        this.load.audio('BulletHit', './assets/SoundEffects/BulletHit.mp3');
+        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
+        this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
         this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
+
         // load animation/sprite atlas
+        this.load.atlas('Add', './assets/Sprites/AddCombine.png', './assets/Sprites/AddCombine.json')
+        this.load.atlas('Cancel', './assets/Sprites/CancelCombine.png', './assets/Sprites/CancelCombine.json')
+        this.load.atlas('Shop', './assets/Sprites/ShopCombine.png', './assets/Sprites/ShopCombine.json')
+
 
     }
 
     create() {
+
+        //UI
+        this.isShopOpen = 0;
+        this.shopSelection = 0;
+
+        let textSpacer = 32;
+        this.ShopInterface = this.add.image(320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
+        this.LaserDamage = this.add.image(210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.speed = this.add.image(210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+
+        this.Add = this.add.sprite(400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+
+
+        this.Add.setDepth(3);
+        this.Add2.setDepth(3);
+        this.Add3.setDepth(3);
+
+        this.LaserDamage.setDepth(3);
+        this.speed.setDepth(3);
+        this.FireRate.setDepth(3);
+        this.ShopInterface.setDepth(2);
+
+        this.input.keyboard.on('keydown_B', () => {
+            if (this.isShopOpen == 0) {
+                this.isShopOpen = 1;
+            } else {
+                this.isShopOpen = 0;
+            }
+
+            this.shopSelection = 0;
+
+            this.LaserDamage.setAlpha(this.isShopOpen);
+            this.speed.setAlpha(this.isShopOpen);
+            this.FireRate.setAlpha(this.isShopOpen);
+            this.ShopInterface.setAlpha(this.isShopOpen);
+            this.Add.setAlpha(this.isShopOpen).setActive(this.isShopOpen).setFrame(2);
+            this.Add2.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+            this.Add3.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+
+
+        });
+
+        this.input.keyboard.on('keydown_DOWN', () => {
+            if (this.isShopOpen == 1) {
+                console.log(this.shopSelection);
+                this.Add.setFrame(1);
+                this.Add2.setFrame(1);
+                this.Add3.setFrame(1);
+
+
+                if (this.shopSelection == 0) {
+                    this.Add2.setFrame(2);
+                    console.log('first');
+                } else if (this.shopSelection == 1) {
+                    this.Add3.setFrame(2);
+                    console.log('second');
+                }
+                else if (this.shopSelection == 2) {
+                    this.Add.setFrame(2);
+                    console.log('third');
+                }
+
+                this.shopSelection += 1;
+                if (this.shopSelection == 3) {
+                    this.shopSelection = 0;
+                }
+            }
+
+        });
+
+        this.input.keyboard.on('keydown_ENTER', () => {
+            if (p1player.money >= 100) {
+                if (this.shopSelection == 0){
+                    if (LaserDamage != 3&&p1player.money >= 4000) {
+                        LaserDamage += 1;
+                        console.log('updatDamage');
+                        p1player.money -= 5000;
+                    }
+                }
+                if (this.shopSelection == 2&&p1player.money >= 500) {
+                    if (FireRate != 200) {
+                        FireRate -= 200;
+                        p1player.money -= 500;
+                        console.log('updateFireRate');
+                    }
+                }
+                if (this.shopSelection == 1&&p1player.money >= 100) {
+                    if (acceleration != 2600) {
+                        acceleration += 200;
+                        p1player.money -= 100;
+                        console.log('updatespeed');
+                    }
+                }
+            }
+        });
+
+
+        //particle effects when explode
+        Chaserparticle = this.add.particles('explode1');
+        Chaserparticle.setDepth(2);
+        Chargerparticle = this.add.particles('explode2');
+        Chargerparticle.setDepth(2);
+
+
 
         //play and loop BGM
         this.sound.play('BGM', { volume: 0.35, loop : true});
@@ -202,10 +324,12 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
+
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0.5,0.5);
         this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         
+
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
@@ -213,27 +337,21 @@ class Play extends Phaser.Scene {
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
-        
 
+        wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        lastFired = 0;
+      
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         // key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         // key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         // key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
         this.timescores = 0;
-        this.clock = this.time.addEvent({
-            delay: 1000,                // ms
-            callback: this.printTime,
-            //args: [],
-            callbackScope: this,
-            loop: true
-        });
-
 
         let smallConfig = {
             fontFamily: 'Comic Sans MS',
             fontSize: '20px',
-            color: '#808000',
+            color: '#0e253e',
             align: 'left',
             fixedWidth: 0,
         }
@@ -248,9 +366,10 @@ class Play extends Phaser.Scene {
         this.levelCount = 0;
         this.spawnInterval = 5000;
         this.roundTime = 120000;
-        this.repeatCount = this.roundTime/this.spawnInterval;
-        this.levelTimeEvent = this.time.addEvent({delay: this.roundTime, callback: this.newLevel ,callbackScope: this, loop: true, startAt:this.roundTime});
-        this.text = this.add.text(400, 100, [], smallConfig);
+        this.repeatCount = this.roundTime / this.spawnInterval;
+        this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
+        this.text = this.add.text(50, 10, [], smallConfig);
+        this.text2 = this.add.text(400, 10, [], smallConfig);
         this.text.setText('Level: ' + this.levelCount);
 
         moveKeys = this.input.keyboard.addKeys({
@@ -265,25 +384,31 @@ class Play extends Phaser.Scene {
 
         p1player.movement(this);
 
-        this.input.on('pointerdown', function (pointer, time, lastFired) {
-            if (p1player.active === false)
-                return;
+        this.input.on('pointerdown', function (pointer) {
+            if ((gametime - lastFired) > FireRate) {
+                lastFired = gametime;
+                if (p1player.active === false)
+                    return;
 
-            this.sound.play('laser_sound', { volume: 0.3 });
-            // Get bullet from bullets group
-            var bullet = p1Bullets.get().setActive(true).setVisible(true);
 
-            if (bullet) {
-                bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback);
-                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback);
+                this.sound.play('laser_sound', { volume: 0.3 });
+                // Get bullet from bullets group
+                var bullet = p1Bullets.get().setActive(true).setVisible(true);
+                console.log('gametime' + gametime);
+                console.log('FireRate' + FireRate);
+
+                if (bullet) {
+                    bullet.Fire(p1player, r1reticle.x, r1reticle.y);
+                    this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback, null, this);
+                    this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback, null, this);
+                }
             }
         }, this);
 
         game.canvas.addEventListener('mousedown', function () {
             game.input.mouse.requestPointerLock();
         });
-
+        1
         // Exit pointer lock when Q or escape (by default) is pressed.
         this.input.keyboard.on('keydown_Q', function (event) {
             if (game.input.mouse.locked)
@@ -301,7 +426,7 @@ class Play extends Phaser.Scene {
 
     }
 
-    update() {
+    update(time) {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
 
@@ -309,7 +434,7 @@ class Play extends Phaser.Scene {
         r1reticle.body.velocity.x = p1player.body.velocity.x;
         r1reticle.body.velocity.y = p1player.body.velocity.y;
 
-        health.x = p1player.x -23;
+        health.x = p1player.x - 23;
         health.y = p1player.y + 30;
         health.draw();
         
@@ -329,38 +454,41 @@ class Play extends Phaser.Scene {
             //change the badguy sprites
 
             let children1 = this.badguy1.getChildren();
-            for(var c = 0; c < children1.length; c++){
-                //console.log(c);
+
+            for (var c = 0; c < children1.length; c++) {
+
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
-            for(var c = 0; c < children2.length; c++){
-                //console.log(c);
+
+            for (var c = 0; c < children2.length; c++) {
+
                 children2[c].changeSprite();
             }
 
         }
-
-        //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
-        //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
 
         if (p1player.invincibility == false) {
             this.physics.overlap(p1player, this.badguy1.getChildren(), this.playerHitCallback, null, this);
             this.physics.overlap(p1player, this.badguy2.getChildren(), this.playerHitCallback, null, this);
         }
 
-        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused );
+        this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused);
+        this.text2.setText('Moeny: ' + p1player.money)
 
-        //console.log(this.repeatCount);
-        //console.log(this.spawnInterval);
-        //console.log(this.levelTimeEvent.elapsed);
 
-        if(this.levelTimeEvent.elapsed >= 119900){
+        gametime = time;
+
+        if (this.levelTimeEvent.elapsed >= 119900) {
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
             console.log('paused');
             setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
+        }
+
+        if(p1player.hp <= 0){
+            this.stop();
         }
 
 
@@ -369,16 +497,56 @@ class Play extends Phaser.Scene {
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
-            enemyHit.hp = enemyHit.hp - 1;
-            
-            //console.log("Enemy hp: ", enemyHit.hp);
+
+            enemyHit.hp = enemyHit.hp - LaserDamage;
+
+            console.log("Enemy hp: ", enemyHit.hp);
+            this.sound.play('BulletHit', { volume: 0.3 });
+
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
-                enemyHit.destroy();
-            }
+                if (enemyHit.dimension == 3) {
+                    this.sound.play('ChaserDead', { volume: 0.3 });
+                    Chaserparticle.createEmitter({
+                        alpha: { start: 1, end: 0 },
+                        scale: { start: 0.1, end: 0.1 },
+                        //tint: { start: 0xff945e, end: 0xff945e },
+                        speed: 10,
+                        accelerationY: -30,
+                        angle: { min: -85, max: -95 },
+                        rotate: { min: -180, max: 180 },
+                        lifespan: { min: 500, max: 600 },
+                        frequency: 10,
+                        maxParticles: 5,
+                        x: enemyHit.x,
+                        y: enemyHit.y
+                    });
+                }
 
-            //console.log(enemyHit);
+                if (enemyHit.dimension == 2) {
+                    this.sound.play('ChargerDead', { volume: 0.3 });
+                    Chargerparticle.createEmitter({
+                        alpha: { start: 1, end: 0 },
+                        scale: { start: 0.1, end: 0.1 },
+                        //tint: { start: 0xff945e, end: 0xff945e },
+                        speed: 10,
+                        accelerationY: -30,
+                        angle: { min: -85, max: -95 },
+                        rotate: { min: -180, max: 180 },
+                        lifespan: { min: 500, max: 600 },
+                        frequency: 10,
+                        maxParticles: 5,
+                        x: enemyHit.x,
+                        y: enemyHit.y
+                    });
+                }
+                enemyHit.destroy();
+
+                p1player.money += 100;
+                p1player.hp += 20;
+                health.increase(20);
+            }
 
             // Destroy bullet
             bulletHit.destroy();
@@ -397,8 +565,14 @@ class Play extends Phaser.Scene {
            
             this.cameras.main.shake(250,0.0025);
 
+<<<<<<< HEAD
             setTimeout(() => { p1player.reset(); }, 650);
 
+=======
+            this.cameras.main.shake(400);
+       
+            setTimeout(() => { p1player.reset(); }, 300);
+>>>>>>> 31fe1be12c0661b7a571d6e8de33c349f7ba0b1e
         }
     }
 
@@ -464,16 +638,18 @@ class Play extends Phaser.Scene {
         this.cameras.main.scrollY = avgY;
     }
 
-    newLevel(){
-        this.Timeevent = this.time.addEvent({delay: this.spawnInterval, callback: this.spawnEnemy ,callbackScope: this, loop: true, repeat: this.repeatCount});
+    newLevel() {
+        this.Timeevent = this.time.addEvent({ delay: this.spawnInterval, callback: this.spawnEnemy, callbackScope: this, loop: true, repeat: this.repeatCount });
         this.levelCount++;
         this.spawnInterval /= 2;
         this.repeatCount *= 2;
     }
 
+
     spawnEnemy(){
         let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 1); 
         let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+
 
         this.badguy1.add(charger);
         this.badguy2.add(chaser);
@@ -483,11 +659,7 @@ class Play extends Phaser.Scene {
         return Math.random() * (max - min) + min;
     }
 
-    printTime() {
-            this.timescores += 0.1;
-    }
-
-    Paused(){
+    Paused() {
         this.levelTimeEvent.paused = false;
         this.Timeevent.paused = false;
     }
