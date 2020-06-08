@@ -21,7 +21,7 @@ class Play extends Phaser.Scene {
         this.load.image('Speed', './assets/Sprites/Speed.png');
 
         this.load.image('FireRate_disabled', './assets/Sprites/FireRate_disabled.png');
-        this.load.image('LaserDamage_disabled', './assets/Sprites/Laser-Damage_disabledpng');
+        this.load.image('LaserDamage_disabled', './assets/Sprites/Damage_disabled.png');
         this.load.image('Speed_disabled', './assets/Sprites/Speed_disabled.png');
 
         this.load.image('FireRate_price', './assets/Sprites/firerate_price.png');
@@ -58,19 +58,19 @@ class Play extends Phaser.Scene {
         let textSpacer = 35;
         let yoffset = 30;
 
-        this.ShopInterface = this.add.image(gamewidth/2, gameheight/2, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen).setOrigin(0.5,0.5);
+        this.ShopInterface = this.add.image(gamewidth/2, gameheight/2, 'ShopInterface').setScale(1.2, 1.2).setAlpha(this.isShopOpen).setOrigin(0.5,0.5);
         this.ShopInterface.setDepth(2);
 
-        this.LaserDamage = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.FireRate = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.Speed = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.LaserDamage = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.Speed = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
         this.LaserDamage.setDepth(3);
         this.Speed.setDepth(3);
         this.FireRate.setDepth(3);
 
-        this.LaserDamage_disabled = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage_disabled', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.FireRate_disabled = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate_disabled', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.Speed_disabled = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed_disabled', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.LaserDamage_disabled = this.add.image(gamewidth/2 - 90, gameheight/2 - textSpacer - yoffset, 'LaserDamage_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRate_disabled = this.add.image(gamewidth/2 - 105, gameheight/2 + textSpacer - yoffset, 'FireRate_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.Speed_disabled = this.add.image(gamewidth/2 - 82, gameheight/2 - yoffset, 'Speed_disabled').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
         this.LaserDamage_disabled.setDepth(3);
         this.Speed_disabled.setDepth(3);
         this.FireRate_disabled.setDepth(3);
@@ -78,9 +78,9 @@ class Play extends Phaser.Scene {
         this.Speed_ismaxed = false;
         this.FireRate_ismaxed = false;
 
-        this.LaserDamagePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 - textSpacer - yoffset, 'LaserDamage_price', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.SpeedPrice = this.add.sprite(gamewidth/2 + 9, gameheight/2 - yoffset, 'Speed_price', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
-        this.FireRatePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 + textSpacer - yoffset, 'FireRate_price', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.LaserDamagePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 - textSpacer - yoffset, 'LaserDamage_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.SpeedPrice = this.add.sprite(gamewidth/2 + 9, gameheight/2 - yoffset, 'Speed_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
+        this.FireRatePrice = this.add.sprite(gamewidth/2 + 20, gameheight/2 + textSpacer - yoffset, 'FireRate_price').setScale(0.4, 0.4).setAlpha(this.isShopOpen);
         this.LaserDamagePrice.setDepth(3);
         this.SpeedPrice.setDepth(3);
         this.FireRatePrice.setDepth(3);
@@ -238,8 +238,8 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        let bgm = this.sound.add('BGM', { volume: 0.35, loop: true });
-        bgm.play();
+        this.bgm = this.sound.add('BGM', { volume: 0.35, loop: true });
+        this.bgm.play();
 
 
         this.anims.create({
@@ -419,7 +419,7 @@ class Play extends Phaser.Scene {
 
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
       
-        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(2.2, 0.8);
+        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.145, 1.06);
         wallhealth = new HealthBar(this, gamewidth/2 +500, 10, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
 
         
@@ -577,23 +577,23 @@ class Play extends Phaser.Scene {
         gametime = time;
 
         if (this.levelTimeEvent.elapsed >= 119900) {
+            this.bgm.pause();
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
-            this.playbgm.pause();
             console.log('paused');
-            setTimeout(() => { this.levelTimeEvent.paused = false;this.playbgm.resume(); }, 30000);
+            setTimeout(() => { 
+                this.levelTimeEvent.paused = false; 
+                this.bgm.resume(); 
+            }, 30000);
         }
 
-        /*
         if(p1player.hp <= 0 || wallhealth.value <=0){
-
-            this.badguy1.destroy();
-            this.badguy2.destroy();
-            this.playbgm.stop();
+            this.badguy1.clear();
+            this.badguy2.clear();
+            this.bgm.stop();
             this.scene.start("DealthScene");
         }
-        */
-
+    
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
