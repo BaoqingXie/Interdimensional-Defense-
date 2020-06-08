@@ -42,15 +42,16 @@ class Play extends Phaser.Scene {
         this.isShopOpen = 0;
         this.shopSelection = 0;
 
-        let textSpacer = 32;
-        this.ShopInterface = this.add.image(320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
-        this.LaserDamage = this.add.image(210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.speed = this.add.image(210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.FireRate = this.add.image(210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        let textSpacer = 35;
+        let yoffset = 30;
+        this.ShopInterface = this.add.image(gamewidth/2, gameheight/2, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen).setOrigin(0.5,0.5);
+        this.LaserDamage = this.add.image(gamewidth/2 - 80, gameheight/2 - textSpacer - yoffset, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.speed = this.add.image(gamewidth/2 - 72, gameheight/2 - yoffset, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(gamewidth/2 - 90, gameheight/2 + textSpacer - yoffset, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
 
-        this.Add = this.add.sprite(400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add2 = this.add.sprite(400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add3 = this.add.sprite(400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add = this.add.sprite(gamewidth/2 + 70, gameheight/2 - textSpacer - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(gamewidth/2 + 70, gameheight/2 - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(gamewidth/2 + 70, gameheight/2 + textSpacer - yoffset, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
 
 
         this.Add.setDepth(3);
@@ -64,7 +65,7 @@ class Play extends Phaser.Scene {
 
         this.input.keyboard.on('keydown_B', () => {
             if (this.isShopOpen == 0) {
-                this.isShopOpen = 1;
+                this.isShopOpen = 0.7;
             } else {
                 this.isShopOpen = 0;
             }
@@ -78,17 +79,14 @@ class Play extends Phaser.Scene {
             this.Add.setAlpha(this.isShopOpen).setActive(this.isShopOpen).setFrame(2);
             this.Add2.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
             this.Add3.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-
-
         });
 
         this.input.keyboard.on('keydown_DOWN', () => {
-            if (this.isShopOpen == 1) {
+            if (this.isShopOpen > 0) {
                 console.log(this.shopSelection);
                 this.Add.setFrame(1);
                 this.Add2.setFrame(1);
                 this.Add3.setFrame(1);
-
 
                 if (this.shopSelection == 0) {
                     this.Add2.setFrame(2);
@@ -107,7 +105,33 @@ class Play extends Phaser.Scene {
                     this.shopSelection = 0;
                 }
             }
+        });
 
+        this.input.keyboard.on('keydown_UP', () => {
+            if (this.isShopOpen > 0) {
+                console.log(this.shopSelection);
+                this.Add.setFrame(1);
+                this.Add2.setFrame(1);
+                this.Add3.setFrame(1);
+
+
+                if (this.shopSelection == 0) {
+                    this.Add3.setFrame(2);
+                    console.log('third');
+                } else if (this.shopSelection == 1) {
+                    this.Add.setFrame(2);
+                    console.log('first');
+                }
+                else if (this.shopSelection == 2) {
+                    this.Add2.setFrame(2);
+                    console.log('second');
+                }
+
+                this.shopSelection -= 1;
+                if (this.shopSelection == -1) {
+                    this.shopSelection = 2;
+                }
+            }
         });
 
         this.input.keyboard.on('keydown_ENTER', () => {
@@ -115,7 +139,7 @@ class Play extends Phaser.Scene {
                 if (this.shopSelection == 0){
                     if (LaserDamage != 3&&p1player.money >= 4000) {
                         LaserDamage += 1;
-                        console.log('updatDamage');
+                        console.log('updateDamage');
                         p1player.money -= 5000;
                     }
                 }
@@ -127,10 +151,10 @@ class Play extends Phaser.Scene {
                     }
                 }
                 if (this.shopSelection == 1&&p1player.money >= 100) {
-                    if (acceleration != 2600) {
+                    if (acceleration <= 2600) {
                         acceleration += 200;
                         p1player.money -= 100;
-                        console.log('updatespeed');
+                        console.log('updateSpeed');
                     }
                 }
             }
