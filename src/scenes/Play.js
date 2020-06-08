@@ -389,18 +389,15 @@ class Play extends Phaser.Scene {
     playerHitCallback(playerHit, enemyHit) {
         // Reduce health of player
         if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
-            playerHit.Hpchange(-5);
-            health.decrease(5);
+            playerHit.Hpchange(-10);
+            health.decrease(10);
 
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
            
+            this.cameras.main.shake(250,0.0025);
 
-            this.cameras.main.shake(400);
-        
-            
-
-            setTimeout(() => { p1player.reset(); }, 300);
+            setTimeout(() => { p1player.reset(); }, 600);
 
         }
     }
