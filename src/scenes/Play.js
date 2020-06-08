@@ -22,10 +22,10 @@ class Play extends Phaser.Scene {
         this.load.image('bg1', './assets/Backgrounds/DimensionRed.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionGreen.png');
 
-        this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
+        this.load.audio('laser_fire', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
-        this.load.audio('BulletHit', './assets/SoundEffects/BulletHit.mp3');
+        this.load.audio('laser_hit', './assets/SoundEffects/laser_hit.mp3');
         this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
         this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
@@ -391,7 +391,7 @@ class Play extends Phaser.Scene {
                     return;
 
 
-                this.sound.play('laser_sound', { volume: 0.3 });
+                this.sound.play('laser_fire', { volume: 0.25 });
                 // Get bullet from bullets group
                 var bullet = p1Bullets.get().setActive(true).setVisible(true);
                 console.log('gametime' + gametime);
@@ -420,10 +420,6 @@ class Play extends Phaser.Scene {
                 r1reticle.movement(p1player, pointer.movementX, pointer.movementY);
             }
         }, this);
-
-        
-        //console.log(this.wall);
-
     }
 
     update(time) {
@@ -501,7 +497,7 @@ class Play extends Phaser.Scene {
             enemyHit.hp = enemyHit.hp - LaserDamage;
 
             console.log("Enemy hp: ", enemyHit.hp);
-            this.sound.play('BulletHit', { volume: 0.3 });
+            this.sound.play('laser_hit', { volume: 0.4 });
 
 
             // Kill enemy if hp <= 0
@@ -565,14 +561,8 @@ class Play extends Phaser.Scene {
            
             this.cameras.main.shake(250,0.0025);
 
-<<<<<<< HEAD
             setTimeout(() => { p1player.reset(); }, 650);
 
-=======
-            this.cameras.main.shake(400);
-       
-            setTimeout(() => { p1player.reset(); }, 300);
->>>>>>> 31fe1be12c0661b7a571d6e8de33c349f7ba0b1e
         }
     }
 
