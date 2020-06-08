@@ -324,11 +324,10 @@ class Play extends Phaser.Scene {
         });
 
 
-        dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0.5,0.5);
-        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
-        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
+        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(2.2, 0.8);
+        wallhealth = new HealthBar(this, gamewidth/2 - 150, 10, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         
-
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
@@ -337,13 +336,9 @@ class Play extends Phaser.Scene {
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
 
-        wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         lastFired = 0;
       
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        // key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-        // key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
-        // key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
         this.timescores = 0;
 
@@ -379,7 +374,9 @@ class Play extends Phaser.Scene {
         });
 
         this.cameras.main.zoom = 1;
-        this.cameras.main.startFollow(p1player);
+        //this.cameras.main.startFollow(p1player);
+        //this.cameras.main.setBounds(0, 0, 1280, 960);
+        //this.cameras.main.setDeadzone(1280, 960);
 
         p1player.movement(this);
 
@@ -430,15 +427,15 @@ class Play extends Phaser.Scene {
         //this.adjustCamera(p1player, r1reticle);
 
         // Make reticle move with player
-        r1reticle.body.velocity.x = p1player.body.velocity.x;
-        r1reticle.body.velocity.y = p1player.body.velocity.y;
+        //r1reticle.body.velocity.x = p1player.body.velocity.x;
+        //r1reticle.body.velocity.y = p1player.body.velocity.y;
 
         health.x = p1player.x - 23;
         health.y = p1player.y + 30;
         health.draw();
         
-        wallhealth.x = 170;
-        wallhealth.y = 450;
+        wallhealth.x = gamewidth/2 - 150;
+        wallhealth.y = 10;
         wallhealth.draw();
     
 

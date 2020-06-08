@@ -1,7 +1,7 @@
 
 
-let gamewidth =  800;
-let gameheight =  600;
+let gamewidth =  1280;
+let gameheight =  960;
 
 let config = {
     type: Phaser.WEBGL,
