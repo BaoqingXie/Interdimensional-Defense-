@@ -7,8 +7,10 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.setDrag(drag,drag);
         this.body.setCollideWorldBounds(true);
         scene.add.existing(this); //add to existing, diplaylist updatelist
-        this.hp = 5;
+        this.hp = 100;
         this.invincibility = false;
+        this.money = 0;
+    
     }
 
     movement(scene) {
