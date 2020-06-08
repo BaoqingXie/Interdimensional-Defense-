@@ -12,6 +12,7 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Start', './assets/Sprites/Start.png', './assets/Sprites/Start.json');
         this.load.atlas('Instruction', './assets/Sprites/Instruction.png', './assets/Sprites/Instruction.json');
         this.load.atlas('Credits', './assets/Sprites/Credit.png', './assets/Sprites/Credit.json');
+        this.load.image('Player', './assets/Sprites/player1-0.png');
     }
 
     create() {
@@ -21,6 +22,7 @@ class Menu extends Phaser.Scene {
         //play and loop BGM
         let menubgm = this.sound.add('menubgm', { volume: 0.1, loop: true });
         menubgm.play();
+
 
         let menuconfig = {
             fontFamily: 'Courier New',
@@ -69,23 +71,21 @@ class Menu extends Phaser.Scene {
                 this.BGMisPlaying = false;
                 this.scene.start("playScene");
             } else if (gameObject === this.Instruction) {
-                this.scene.start("InstructionScene");
+                this.scene.switch("InstructionScene");
             } else {
-
-
-                this.scene.start("CreditsScene");
+                this.scene.switch("CreditsScene");
             }
         });
 
         this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
         // bgm
-        if (!this.BGMisPlaying) {
-            this.menubgm = this.sound.add('menubgm');
-            this.menubgm.loop = true;
-            this.menubgm.volume = 0.7;
-            this.menubgm.play();
-            this.BGMisPlaying = true;
-        }
+        // if (!this.BGMisPlaying) {
+        //     this.menubgm = this.sound.add('menubgm');
+        //     this.menubgm.loop = true;
+        //     this.menubgm.volume = 0.7;
+        //     this.menubgm.play();
+        //     this.BGMisPlaying = true;
+        // }
 
 
     }
