@@ -242,7 +242,8 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        this.sound.play('BGM', { volume: 0.35, loop : true});
+        let bgm = this.sound.add('BGM', { volume: 0.35, loop: true });
+        bgm.play();
 
 
         this.anims.create({
