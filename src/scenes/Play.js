@@ -625,8 +625,7 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        //console.log(avgX);
-        //console.log(avgY);
+
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
