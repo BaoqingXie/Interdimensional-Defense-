@@ -12,7 +12,6 @@ class Instruction extends Phaser.Scene {
         this.load.image('Charger', './assets/Sprites/charger1-0.png');
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.audio('Selection', './assets/Sprites/Selection.wav');
-        this.load.atlas('Wall', './assets/Sprites/wall.png', './assets/Sprites/wall.json');
         this.load.atlas('Back', './assets/Sprites/Back.png', './assets/Sprites/Back.json');
         this.load.image('menubg', './assets/Backgrounds/MenuBackground.png');
     }
@@ -46,7 +45,7 @@ class Instruction extends Phaser.Scene {
         this.add.text(centerX - 6 * textSpacer, centerY - 2 * textSpacer, 'In the shop, press enter to buy', smallConfig).setOrigin(0, 0);
         this.add.text(centerX - 6 * textSpacer, centerY - 1.5 * textSpacer, 'Press spacebar to change dimension', smallConfig).setOrigin(0, 0);
 
-        this.add.image(centerX - 6.5 * textSpacer,  centerY - 3 * textSpacer,'Player', 10).setScale(1, 1);
+        this.add.image(centerX - 6.5 * textSpacer,  centerY - 3 * textSpacer,'Player').setScale(1, 1);
 
         this.add.text(centerX + textSpacer, centerY - 5 * textSpacer, 'Monsters:', titleConfig).setOrigin(0, 0);
         this.add.text(centerX + textSpacer, centerY - 4 * textSpacer, 'Charger will directly go to attack wall', smallConfig).setOrigin(0, 0);

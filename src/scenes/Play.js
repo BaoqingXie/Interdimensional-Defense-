@@ -5,9 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
-        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
+        this.load.atlas('wall-atlas', './assets/Sprites/wall.png', './assets/Sprites/wall.json');
 
-        this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
         this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
@@ -43,14 +42,14 @@ class Play extends Phaser.Scene {
         this.shopSelection = 0;
 
         let textSpacer = 32;
-        this.ShopInterface = this.add.image(this, 320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
-        this.LaserDamage = this.add.image(this, 210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.speed = this.add.image(this, 210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
-        this.FireRate = this.add.image(this, 210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.ShopInterface = this.add.image(320, 240, 'ShopInterface').setScale(1.2, 1.2).setAlpha(this.isShopOpen);
+        this.LaserDamage = this.add.image(210, 200 - textSpacer, 'LaserDamage').setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.speed = this.add.image(210, 200, 'Speed').setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(210, 200 + textSpacer, 'FireRate').setScale(0.3, 0.3).setAlpha(this.isShopOpen);
 
-        this.Add = this.add.sprite(this, 400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add2 = this.add.sprite(this, 400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
-        this.Add3 = this.add.sprite(this, 400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add = this.add.sprite(400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
 
 
         this.Add.setDepth(3);
@@ -146,7 +145,8 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        this.playbgm = this.sound.play('BGM', { volume: 0.35, loop : true});
+        this.playbgm = this.sound.add('BGM', { volume: 0.35, loop : true});
+        this.playbgm.play();
 
 
         this.anims.create({
@@ -475,7 +475,7 @@ class Play extends Phaser.Scene {
             setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
         }
 
-        if(p1player.hp <= 0){
+        if(p1player.hp <= 0 || wallhealth.value <=0){
             this.badguy1.destroy();
             this.badguy2.destroy();
             this.playbgm.stop();

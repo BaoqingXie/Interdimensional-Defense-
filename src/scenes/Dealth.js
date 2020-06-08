@@ -39,9 +39,9 @@ class Dealth extends Phaser.Scene {
 
         game.input.mouse.releasePointerLock();
 
-        this.add.image(centerX ,  centerY - 3 * textSpacer,'GameOver', 10).setScale(1, 1);
-        this.Restart = this.add.sprite(centerX ,  centerY - 2 * textSpacer,'Restart', 10).setScale(1, 1);
-        this.Back = this.add.sprite(centerX ,  centerY - 1 * textSpacer,'Back', 10).setScale(1, 1);
+        this.add.image(centerX ,  centerY - 3 * textSpacer,'GameOver').setScale(1, 1);
+        this.Restart = this.add.sprite(centerX ,  centerY - 2 * textSpacer, 'Restart').setScale(1, 1);
+        this.Back = this.add.sprite(centerX ,  centerY - 1 * textSpacer,'Back').setScale(1, 1);
 
         this.Back.setInteractive({
             useHandCursor: true

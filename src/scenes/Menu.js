@@ -12,6 +12,7 @@ class Menu extends Phaser.Scene {
         this.load.atlas('Start', './assets/Sprites/Start.png', './assets/Sprites/Start.json');
         this.load.atlas('Instruction', './assets/Sprites/Instruction.png', './assets/Sprites/Instruction.json');
         this.load.atlas('Credits', './assets/Sprites/Credit.png', './assets/Sprites/Credit.json');
+        this.load.image('Player', './assets/Sprites/player1-0.png');
     }
 
     create() {
