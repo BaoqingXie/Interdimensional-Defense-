@@ -31,8 +31,6 @@ class Laser extends Phaser.GameObjects.Sprite {
             this.ySpeed = -this.speed*Math.cos(this.direction);
         }
 
-        console.log('fire');
-
         this.rotation = shooter.rotation; // angle bullet with shooters rotation
         this.born = 1000; // Time since new bullet spawned
     }
