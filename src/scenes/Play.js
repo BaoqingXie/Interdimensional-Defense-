@@ -336,7 +336,6 @@ class Play extends Phaser.Scene {
                 console.log(c);
                 children2[c].changeSprite();
             }
-
         }
 
         //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
