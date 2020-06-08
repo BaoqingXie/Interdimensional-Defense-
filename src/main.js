@@ -18,10 +18,13 @@ let config = {
         }
     },
 
-    scene: [Menu,Play],
+    scene: [Menu, Instruction, Credits,Play, Dealth],
 };
 
 let game = new Phaser.Game(config);
+
+let centerX = gamewidth/2;
+let centerY = gameheight/2;
 
 let deltax = 0;
 let deltay = 0;

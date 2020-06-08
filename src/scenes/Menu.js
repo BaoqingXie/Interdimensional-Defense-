@@ -6,13 +6,20 @@ class Menu extends Phaser.Scene {
 
     preload() {
         this.load.audio('menubgm', './assets/SoundEffects/pulsating sound.mp3');
+        this.load.audio('Selection', './assets/SoundEffects/Selection.wav');
         this.load.image('menubg', './assets/Backgrounds/MenuBackground.png');
+        this.load.image('InterdimensionalDefense', './assets/Sprites/InterdimensionalDefense.png');
+        this.load.atlas('Start', './assets/Sprites/Start.png', './assets/Sprites/Start.json');
+        this.load.atlas('Instruction', './assets/Sprites/Instruction.png', './assets/Sprites/Instruction.json');
+        this.load.atlas('Credits', './assets/Sprites/Credit.png', './assets/Sprites/Credit.json');
     }
 
     create() {
 
+        game.input.mouse.releasePointerLock();
+
         //play and loop BGM
-        let menubgm = this.sound.add('menubgm', { volume: 0.1, loop : true});
+        let menubgm = this.sound.add('menubgm', { volume: 0.3, loop: true });
         menubgm.play();
 
         let menuconfig = {
@@ -23,17 +30,61 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0,
         }
 
-        this.add.text(gamewidth/2, gameheight/2,'press S to enter Demo').setOrigin(0.5, 0.5);
-        this.add.text(gamewidth/2, gameheight/2+30,'wasd to move, mouse to aim and shoot').setOrigin(0.5, 0.5);
-        this.add.text(gamewidth/2, gameheight/2+60,'space to shift dimensions').setOrigin(0.5, 0.5);
+        this.Gamelogo = this.add.sprite(gamewidth / 2, gameheight / 2 - 200, 'InterdimensionalDefense').setScale(0.75, 0.75);
+        this.Gamelogo.setDepth(2);
+
+        this.Start = this.add.sprite(gamewidth / 2, gameheight / 2 - 100, 'Start').setScale(0.5, 0.5);
+        this.Start.setDepth(2);
+        this.Instruction = this.add.sprite(gamewidth / 2, gameheight / 2, 'Instruction').setScale(0.5, 0.5);
+        this.Instruction.setDepth(2);
+        this.Credits = this.add.sprite(gamewidth / 2, gameheight / 2 + 100, 'Credits').setScale(0.5, 0.5);
+        this.Credits.setDepth(2);
+
+        this.Start.setInteractive({
+            useHandCursor: true
+        });
+
+        this.Instruction.setInteractive({
+            useHandCursor: true
+        });
+
+        this.Credits.setInteractive({
+            useHandCursor: true
+        });
+
+        this.input.on('gameobjectover', (pointer, gameObject, event) => {
+            gameObject.setFrame(2);
+        });
+
+
+        this.input.on('gameobjectout', (pointer, gameObject, event) => {
+            gameObject.setFrame(1);
+        });
+
+        this.input.on('gameobjectdown', (pointer, gameObject, event) => {
+            this.sound.play('Selection', { volume: 0.25 });
+            if (gameObject === this.Start) {
+                this.scene.start("playScene");
+                this.menubgm.stop();
+                this.BGMisPlaying = false;
+            } else if (gameObject === this.Instruction) {
+                this.scene.start("InstructionScene");
+            } else {
+
+                this.scene.start("CreditsScene");
+            }
+        });
 
         this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
+        // bgm
+        if (!this.BGMisPlaying) {
+            this.menubgm = this.sound.add('menubgm');
+            this.menubgm.loop = true;
+            this.menubgm.volume = 0.7;
+            this.menubgm.play();
+            this.BGMisPlaying = true;
+        }
 
-      
-        this.input.keyboard.on('keydown_S', ()=> {
-            menubgm.stop();
-            this.scene.start("playScene"); 
-        });
 
     }
 

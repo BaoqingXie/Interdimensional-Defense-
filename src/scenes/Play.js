@@ -349,17 +349,8 @@ class Play extends Phaser.Scene {
 
         this.timescores = 0;
 
-        
-
-
-        //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-        
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
-
-
-
 
         this.levelCount = 0;
         this.spawnInterval = 5000;
@@ -492,7 +483,11 @@ class Play extends Phaser.Scene {
         }
 
         if(p1player.hp <= 0){
-            this.stop();
+            this.badguy1.destroy();
+            this.badguy2.destroy();
+
+            this.scene.remove();
+            this.scene.start("DealthScene");
         }
 
 
