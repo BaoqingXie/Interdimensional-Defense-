@@ -600,11 +600,9 @@ class Play extends Phaser.Scene {
 
         // Ensures reticle cannot be moved offscreen
         if (distX > gamewidth) {
-            console.log('fix');
             reticle.x = player.x + gamewidth;
         }
         else if (distX < -gamewidth) {
-            console.log('fix');
             reticle.x = player.x - gamewidth;
         }
 

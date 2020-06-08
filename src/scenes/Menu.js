@@ -17,7 +17,7 @@ class Menu extends Phaser.Scene {
 
         let menuconfig = {
             fontFamily: 'Courier New',
-            fontSize: '30px',
+            fontSize: '50px',
             color: '#000000',
             align: 'left',
             fixedWidth: 0,
@@ -25,9 +25,9 @@ class Menu extends Phaser.Scene {
 
         this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
         
-        this.add.text(gamewidth/2, gameheight/2 - 30,'press S to enter Demo', menuconfig).setOrigin(0.5, 0.5);
-        this.add.text(gamewidth/2, gameheight/2 + 30,'wasd to move, mouse to aim and shoot', menuconfig).setOrigin(0.5, 0.5);
-        this.add.text(gamewidth/2, gameheight/2 + 60,'space to shift dimensions', menuconfig).setOrigin(0.5, 0.5);
+        this.add.text(gamewidth/2, gameheight/2 - 50,'press S to enter Demo', menuconfig).setOrigin(0.5, 0.5);
+        this.add.text(gamewidth/2, gameheight/2 + 50,'wasd to move, mouse to aim and shoot', menuconfig).setOrigin(0.5, 0.5);
+        this.add.text(gamewidth/2, gameheight/2 + 100,'space to shift dimensions', menuconfig).setOrigin(0.5, 0.5);
 
         
 
