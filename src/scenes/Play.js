@@ -8,8 +8,6 @@ class Play extends Phaser.Scene {
         this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
-        this.load.image('charger2', './assets/Sprites/charger2-0.png');
-        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
         this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
@@ -159,7 +157,7 @@ class Play extends Phaser.Scene {
                 zeroPad: 1,
                 prefix: 'wall-',
             }),
-            frameRate: 6,
+            frameRate: 20,
             repeat: 0
         });
 
@@ -328,7 +326,7 @@ class Play extends Phaser.Scene {
 
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
       
-        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(2.2, 0.8);
+        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.145, 0.62);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 10, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
 
         
@@ -343,23 +341,14 @@ class Play extends Phaser.Scene {
 
         lastFired = 0;
       
-
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-
         this.timescores = 0;
-
         
 
-
-        //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-        //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-        
+   
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
-
-
-
 
         this.levelCount = 0;
         this.spawnInterval = 5000;
@@ -459,16 +448,12 @@ class Play extends Phaser.Scene {
             //change the badguy sprites
 
             let children1 = this.badguy1.getChildren();
-
             for (var c = 0; c < children1.length; c++) {
-
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
-
             for (var c = 0; c < children2.length; c++) {
-
                 children2[c].changeSprite();
             }
 
@@ -502,7 +487,6 @@ class Play extends Phaser.Scene {
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
-
             enemyHit.hp = enemyHit.hp - LaserDamage;
 
             console.log("Enemy hp: ", enemyHit.hp);

@@ -36,7 +36,7 @@ class Charger extends Phaser.GameObjects.Sprite {
 
     update() {
             // chargers run straight downwards (towards the wall)
-        if(this.y < 415) {// WHATEVER PIXEL THE WALL IS AT
+        if(this.y < 870) {// WHATEVER PIXEL THE WALL IS AT
             this.y += this.speed;
         }
         else{ 
@@ -45,7 +45,8 @@ class Charger extends Phaser.GameObjects.Sprite {
                 this.damageTimer = this.scene.time.addEvent({
                     delay: 1000,
                     callback: () => {
-                        if(this.active){ wallhealth.decrease(4);}
+                        if(this.active){ wallhealth.decrease(4);
+                                         this.scene.wall.play('wall-anim');}
                     },
                     loop: true
                 })
