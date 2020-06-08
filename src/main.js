@@ -1,4 +1,8 @@
+/*   INTERDIMENSIONAL DEFENSE
 
+A game by: Alec Zhang, BaoQing Xie, Brad Kim, and JunYao Li
+
+*/
 
 let gamewidth =  1280;
 let gameheight =  960;
@@ -56,7 +60,7 @@ let acceleration = 1500;
 
 //gun attributes
 let LaserDamage = 1;
-let FireRate = 400;
+let FireRate = 800;
 
 //chasers
 let chaserSpeed = 1;
