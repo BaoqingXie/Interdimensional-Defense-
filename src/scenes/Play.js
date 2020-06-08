@@ -8,8 +8,6 @@ class Play extends Phaser.Scene {
         this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
-        this.load.image('charger2', './assets/Sprites/charger2-0.png');
-        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
         this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
@@ -26,7 +24,7 @@ class Play extends Phaser.Scene {
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
 
         this.load.audio('laser_hit', './assets/SoundEffects/laser_hit.mp3');
-        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
+        this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.mp3');
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
         this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
 
@@ -159,7 +157,7 @@ class Play extends Phaser.Scene {
                 zeroPad: 1,
                 prefix: 'wall-',
             }),
-            frameRate: 6,
+            frameRate: 20,
             repeat: 0
         });
 
@@ -328,7 +326,7 @@ class Play extends Phaser.Scene {
 
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0,0);
       
-        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(2.2, 0.8);
+        this.wall = new Wall(this, 0, 870, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.145, 0.62);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 10, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
 
         
@@ -343,9 +341,7 @@ class Play extends Phaser.Scene {
 
         lastFired = 0;
       
-
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
 
         this.timescores = 0;
 
@@ -444,21 +440,18 @@ class Play extends Phaser.Scene {
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.4 });
+            this.cameras.main.shake(50,0.004);
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
 
             let children1 = this.badguy1.getChildren();
-
             for (var c = 0; c < children1.length; c++) {
-
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
-
             for (var c = 0; c < children2.length; c++) {
-
                 children2[c].changeSprite();
             }
 
@@ -496,7 +489,6 @@ class Play extends Phaser.Scene {
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
-
             enemyHit.hp = enemyHit.hp - LaserDamage;
 
             console.log("Enemy hp: ", enemyHit.hp);
@@ -505,25 +497,25 @@ class Play extends Phaser.Scene {
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
-                if (enemyHit.dimension == 3) {
-                    this.sound.play('ChaserDead', { volume: 0.3 });
-                    Chaserparticle.createEmitter({
-                        alpha: { start: 1, end: 0 },
-                        scale: { start: 0.1, end: 0.1 },
-                        //tint: { start: 0xff945e, end: 0xff945e },
-                        speed: 10,
-                        accelerationY: -30,
-                        angle: { min: -85, max: -95 },
-                        rotate: { min: -180, max: 180 },
-                        lifespan: { min: 500, max: 600 },
-                        frequency: 10,
-                        maxParticles: 5,
-                        x: enemyHit.x,
-                        y: enemyHit.y
-                    });
-                }
+                // if (enemyHit.dimension == 1) {
+                //     this.sound.play('ChaserDead', { volume: 0.3 });
+                //     Chaserparticle.createEmitter({
+                //         alpha: { start: 1, end: 0 },
+                //         scale: { start: 0.1, end: 0.1 },
+                //         //tint: { start: 0xff945e, end: 0xff945e },
+                //         speed: 10,
+                //         accelerationY: -30,
+                //         angle: { min: -85, max: -95 },
+                //         rotate: { min: -180, max: 180 },
+                //         lifespan: { min: 500, max: 600 },
+                //         frequency: 10,
+                //         maxParticles: 5,
+                //         x: enemyHit.x,
+                //         y: enemyHit.y
+                //     });
+                // }
 
-                if (enemyHit.dimension == 2) {
+                // if (enemyHit.dimension == 2) {
                     this.sound.play('ChargerDead', { volume: 0.3 });
                     Chargerparticle.createEmitter({
                         alpha: { start: 1, end: 0 },
@@ -539,7 +531,7 @@ class Play extends Phaser.Scene {
                         x: enemyHit.x,
                         y: enemyHit.y
                     });
-                }
+                // }
                 enemyHit.destroy();
 
                 p1player.money += 100;
@@ -562,7 +554,7 @@ class Play extends Phaser.Scene {
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
            
-            this.cameras.main.shake(250,0.0025);
+            this.cameras.main.shake(200,0.0015);
 
             setTimeout(() => { p1player.reset(); }, 650);
 
@@ -595,11 +587,9 @@ class Play extends Phaser.Scene {
 
         // Ensures reticle cannot be moved offscreen
         if (distX > gamewidth) {
-            console.log('fix');
             reticle.x = player.x + gamewidth;
         }
         else if (distX < -gamewidth) {
-            console.log('fix');
             reticle.x = player.x - gamewidth;
         }
 
@@ -613,9 +603,6 @@ class Play extends Phaser.Scene {
         if (distBetween > radius) {
             // Place reticle on perimeter of circle on line intersecting player & reticle
             var scale = distBetween / radius;
-
-            console.log('fix')
-
             reticle.x = player.x + (reticle.x - player.x) / scale;
             reticle.y = player.y + (reticle.y - player.y) / scale;
         }
@@ -625,8 +612,7 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        //console.log(avgX);
-        //console.log(avgY);
+
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
@@ -642,7 +628,6 @@ class Play extends Phaser.Scene {
     spawnEnemy(){
         let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 1); 
         let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
-
 
         this.badguy1.add(charger);
         this.badguy2.add(chaser);

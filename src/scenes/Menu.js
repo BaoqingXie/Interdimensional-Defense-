@@ -24,11 +24,12 @@ class Menu extends Phaser.Scene {
 
         let menuconfig = {
             fontFamily: 'Courier New',
-            fontSize: '30px',
+            fontSize: '50px',
             color: '#000000',
             align: 'left',
             fixedWidth: 0,
         }
+
 
         this.Gamelogo = this.add.sprite(gamewidth / 2, gameheight / 2 - 200, 'InterdimensionalDefense').setScale(0.75, 0.75);
         this.Gamelogo.setDepth(2);
@@ -70,6 +71,7 @@ class Menu extends Phaser.Scene {
             } else if (gameObject === this.Instruction) {
                 this.scene.start("InstructionScene");
             } else {
+
 
                 this.scene.start("CreditsScene");
             }
