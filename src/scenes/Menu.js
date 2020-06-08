@@ -6,6 +6,7 @@ class Menu extends Phaser.Scene {
 
     preload() {
         this.load.audio('menubgm', './assets/SoundEffects/menu.mp3');
+        this.load.image('menubg', './assets/Backgrounds/MenuBackground.png');
     }
 
     create() {
@@ -17,6 +18,7 @@ class Menu extends Phaser.Scene {
         this.add.text(gamewidth/2, gameheight/2+30,'wasd to move, mouse to aim and shoot').setOrigin(0.5, 0.5);
         this.add.text(gamewidth/2, gameheight/2+60,'space to shift dimensions').setOrigin(0.5, 0.5);
         this.add.text(gamewidth/2, gameheight/2+90,'game is still in progress').setOrigin(0.5, 0.5);
+        this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
       
         this.input.keyboard.on('keydown_S', ()=> {
             this.scene.start("playScene"); 
@@ -24,6 +26,7 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
+        this.menubg.tilePositionX -= 4
     }
 
 }
