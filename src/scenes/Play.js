@@ -5,12 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
-        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
+        this.load.atlas('wall-atlas', './assets/Sprites/wall.png', './assets/Sprites/wall.json');
 
-
-        this.load.image('Player', './assets/Sprites/player1-0.png');
-        this.load.image('charger2', './assets/Sprites/charger2-0.png');
-        this.load.image('chaser3', './assets/Sprites/chaser3-0.png');
         this.load.image('laser', './assets/Sprites/laser.png');
         this.load.image('reticle', './assets/Sprites/reticle.png');
 
@@ -587,10 +583,10 @@ class Play extends Phaser.Scene {
             setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
         }
 
-        if(p1player.hp <= 0){
+        if(p1player.hp <= 0 || wallhealth.value <=0){
             this.badguy1.destroy();
             this.badguy2.destroy();
-
+            this.playbgm.stop();
             this.scene.start("DealthScene");
         }
 
