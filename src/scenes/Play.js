@@ -578,8 +578,7 @@ class Play extends Phaser.Scene {
             this.bgm.pause();
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
-            this.playbgm.pause();
-            setTimeout(() => { this.levelTimeEvent.paused = false;this.playbgm.resume(); }, 30000);
+            setTimeout(() => { this.levelTimeEvent.paused = false;this.bgm.resume(); }, 30000);
         }
 
           if(p1player.hp <= 0 || wallhealth.value <=0){
@@ -747,3 +746,4 @@ class Play extends Phaser.Scene {
         this.Timeevent.paused = false;
     }
 }
+
