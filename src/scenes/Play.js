@@ -13,6 +13,10 @@ class Play extends Phaser.Scene {
         this.load.image('reticle', './assets/Sprites/reticle.png');
         this.load.image('explode1', './assets/Particle/16_sunburn_spritesheet.png');
         this.load.image('explode2', './assets/Particle/12_nebula_spritesheet.png');
+        this.load.image('FireRate', './assets/Sprites/FireRate.png');
+        this.load.image('LaserDamage', './assets/Sprites/Laser-Damage.png');
+        this.load.image('Speed', './assets/Sprites/Speed.png');
+        this.load.image('ShopInterface', './assets/Sprites/ShopInterface.png');
 
         this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
         this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
@@ -26,16 +30,121 @@ class Play extends Phaser.Scene {
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
 
         // load animation/sprite atlas
+        this.load.atlas('Add', './assets/Sprites/AddCombine.png', './assets/Sprites/AddCombine.json')
+        this.load.atlas('Cancel', './assets/Sprites/CancelCombine.png', './assets/Sprites/CancelCombine.json')
+        this.load.atlas('Shop', './assets/Sprites/ShopCombine.png', './assets/Sprites/ShopCombine.json')
+
 
     }
 
     create() {
+
+
+        //UI
+        this.isShopOpen = 0;
+        this.shopSelection = 0;
+
+        let textSpacer = 32;
+        this.ShopInterface = this.add.image(320, 240, 'ShopInterface', 1).setScale(1.2, 1.2).setAlpha(this.isShopOpen);
+        this.LaserDamage = this.add.image(210, 200 - textSpacer, 'LaserDamage', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.speed = this.add.image(210, 200, 'Speed', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+        this.FireRate = this.add.image(210, 200 + textSpacer, 'FireRate', 1).setScale(0.3, 0.3).setAlpha(this.isShopOpen);
+
+        this.Add = this.add.sprite(400, 200 - textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add2 = this.add.sprite(400, 200, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+        this.Add3 = this.add.sprite(400, 200 + textSpacer, 'Add', 1).setScale(0.4, 0.4).setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+
+
+        this.Add.setDepth(3);
+        this.Add2.setDepth(3);
+        this.Add3.setDepth(3);
+
+        this.LaserDamage.setDepth(3);
+        this.speed.setDepth(3);
+        this.FireRate.setDepth(3);
+        this.ShopInterface.setDepth(2);
+
+        this.input.keyboard.on('keydown_B', () => {
+            if (this.isShopOpen == 0) {
+                this.isShopOpen = 1;
+            } else {
+                this.isShopOpen = 0;
+            }
+
+            this.shopSelection = 0;
+
+            this.LaserDamage.setAlpha(this.isShopOpen);
+            this.speed.setAlpha(this.isShopOpen);
+            this.FireRate.setAlpha(this.isShopOpen);
+            this.ShopInterface.setAlpha(this.isShopOpen);
+            this.Add.setAlpha(this.isShopOpen).setActive(this.isShopOpen).setFrame(2);
+            this.Add2.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+            this.Add3.setAlpha(this.isShopOpen).setActive(this.isShopOpen);
+
+
+        });
+
+        this.input.keyboard.on('keydown_DOWN', () => {
+            if (this.isShopOpen == 1) {
+                console.log(this.shopSelection);
+                this.Add.setFrame(1);
+                this.Add2.setFrame(1);
+                this.Add3.setFrame(1);
+
+
+                if (this.shopSelection == 0) {
+                    this.Add2.setFrame(2);
+                    console.log('first');
+                } else if (this.shopSelection == 1) {
+                    this.Add3.setFrame(2);
+                    console.log('second');
+                }
+                else if (this.shopSelection == 2) {
+                    this.Add.setFrame(2);
+                    console.log('third');
+                }
+
+                this.shopSelection += 1;
+                if (this.shopSelection == 3) {
+                    this.shopSelection = 0;
+                }
+            }
+
+        });
+
+        this.input.keyboard.on('keydown_ENTER', () => {
+            if (p1player.money >= 100) {
+                if (this.shopSelection == 0){
+                    if (LaserDamage != 3&&p1player.money >= 4000) {
+                        LaserDamage += 1;
+                        console.log('updatDamage');
+                        p1player.money -= 5000;
+                    }
+                }
+                if (this.shopSelection == 2&&p1player.money >= 500) {
+                    if (FireRate != 200) {
+                        FireRate -= 200;
+                        p1player.money -= 500;
+                        console.log('updateFireRate');
+                    }
+                }
+                if (this.shopSelection == 1&&p1player.money >= 100) {
+                    if (acceleration != 2600) {
+                        acceleration += 200;
+                        p1player.money -= 100;
+                        console.log('updatespeed');
+                    }
+                }
+            }
+        });
+
 
         //particle effects when explode
         Chaserparticle = this.add.particles('explode1');
         Chaserparticle.setDepth(2);
         Chargerparticle = this.add.particles('explode2');
         Chargerparticle.setDepth(2);
+
 
         //create anims using the texture atlas
         this.anims.create({
@@ -207,26 +316,19 @@ class Play extends Phaser.Scene {
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
-        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        lastFired = 0;
 
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
         this.timescores = 0;
-        this.clock = this.time.addEvent({
-            delay: 1000,                // ms
-            callback: this.printTime,
-            //args: [],
-            callbackScope: this,
-            loop: true
-        });
-
 
         let smallConfig = {
             fontFamily: 'Comic Sans MS',
             fontSize: '20px',
-            color: '#808000',
+            color: '#0e253e',
             align: 'left',
             fixedWidth: 0,
         }
@@ -243,7 +345,8 @@ class Play extends Phaser.Scene {
         this.roundTime = 120000;
         this.repeatCount = this.roundTime / this.spawnInterval;
         this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
-        this.text = this.add.text(400, 100, [], smallConfig);
+        this.text = this.add.text(50, 10, [], smallConfig);
+        this.text2 = this.add.text(400, 10, [], smallConfig);
         this.text.setText('Level: ' + this.levelCount);
 
         moveKeys = this.input.keyboard.addKeys({
@@ -258,26 +361,31 @@ class Play extends Phaser.Scene {
 
         p1player.movement(this);
 
-        this.input.on('pointerdown', function (pointer, time, lastFired) {
-            if (p1player.active === false)
-                return;
+        this.input.on('pointerdown', function (pointer) {
+            if ((gametime - lastFired) > FireRate) {
+                lastFired = gametime;
+                if (p1player.active === false)
+                    return;
 
-            this.sound.play('laser_sound', { volume: 0.3 });
-            // Get bullet from bullets group
-            var bullet = p1Bullets.get().setActive(true).setVisible(true);
-            console.log(this);
 
-            if (bullet) {
-                bullet.Fire(p1player, r1reticle.x, r1reticle.y);
-                this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback, null, this);
-                this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback, null, this);
+                this.sound.play('laser_sound', { volume: 0.3 });
+                // Get bullet from bullets group
+                var bullet = p1Bullets.get().setActive(true).setVisible(true);
+                console.log('gametime' + gametime);
+                console.log('FireRate' + FireRate);
+
+                if (bullet) {
+                    bullet.Fire(p1player, r1reticle.x, r1reticle.y);
+                    this.physics.add.collider(this.badguy1.getChildren(), bullet, this.enemyHitCallback, null, this);
+                    this.physics.add.collider(this.badguy2.getChildren(), bullet, this.enemyHitCallback, null, this);
+                }
             }
         }, this);
 
         game.canvas.addEventListener('mousedown', function () {
             game.input.mouse.requestPointerLock();
         });
-
+        1
         // Exit pointer lock when Q or escape (by default) is pressed.
         this.input.keyboard.on('keydown_Q', function (event) {
             if (game.input.mouse.locked)
@@ -293,7 +401,7 @@ class Play extends Phaser.Scene {
 
     }
 
-    update() {
+    update(time) {
         p1player.rotation = Phaser.Math.Angle.Between(p1player.x, p1player.y, r1reticle.x, r1reticle.y);
         //this.adjustCamera(p1player, r1reticle);
 
@@ -318,20 +426,15 @@ class Play extends Phaser.Scene {
 
             let children1 = this.badguy1.getChildren();
             for (var c = 0; c < children1.length; c++) {
-                console.log(c);
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
             for (var c = 0; c < children2.length; c++) {
-                console.log(c);
                 children2[c].changeSprite();
             }
 
         }
-
-        //this.physics.add.collider(p1player, this.badguy1, this.playerHitCallback);
-        //this.physics.add.collider(p1player, this.badguy2, this.playerHitCallback);
 
         if (p1player.invincibility == false) {
             this.physics.overlap(p1player, this.badguy1.getChildren(), this.playerHitCallback, null, this);
@@ -339,10 +442,9 @@ class Play extends Phaser.Scene {
         }
 
         this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused);
+        this.text2.setText('Moeny: ' + p1player.money)
 
-        //console.log(this.repeatCount);
-        //console.log(this.spawnInterval);
-        console.log(this.levelTimeEvent.elapsed);
+        gametime = time;
 
         if (this.levelTimeEvent.elapsed >= 119900) {
             this.levelTimeEvent.paused = true;
@@ -351,14 +453,18 @@ class Play extends Phaser.Scene {
             setTimeout(() => { this.levelTimeEvent.paused = false; }, 10000);
         }
 
+        if(p1player.hp <= 0){
+            this.stop();
+        }
+
 
     }
 
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
-            enemyHit.hp = enemyHit.hp - 1;
-            
+            enemyHit.hp = enemyHit.hp - LaserDamage;
+
             console.log("Enemy hp: ", enemyHit.hp);
             this.sound.play('BulletHit', { volume: 0.3 });
 
@@ -400,6 +506,10 @@ class Play extends Phaser.Scene {
                     });
                 }
                 enemyHit.destroy();
+
+                p1player.money += 100;
+                p1player.hp += 20;
+                health.increase(20);
             }
 
             // Destroy bullet
@@ -417,9 +527,7 @@ class Play extends Phaser.Scene {
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
 
-
             setTimeout(() => { p1player.reset(); }, 300);
-
         }
     }
 
@@ -502,10 +610,6 @@ class Play extends Phaser.Scene {
 
     getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
-    }
-
-    printTime() {
-        this.timescores += 0.1;
     }
 
     Paused() {
