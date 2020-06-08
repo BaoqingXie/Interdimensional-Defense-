@@ -326,6 +326,8 @@ class Play extends Phaser.Scene {
 
 
         dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0.5,0.5);
+
+        
         this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
         wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         
@@ -335,26 +337,23 @@ class Play extends Phaser.Scene {
         p1player = new Player(this, gamewidth / 2, gameheight / 2, 'Player').setOrigin(0.5, 0.5);
         r1reticle = new reticle(this, gamewidth / 2, gameheight / 2, 'reticle').setScale(1, 1);
 
+
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
 
         wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         lastFired = 0;
       
+
         keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         // key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         // key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         // key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
+
         this.timescores = 0;
 
-        let smallConfig = {
-            fontFamily: 'Comic Sans MS',
-            fontSize: '20px',
-            color: '#0e253e',
-            align: 'left',
-            fixedWidth: 0,
-        }
+        
 
 
         //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
@@ -363,11 +362,22 @@ class Play extends Phaser.Scene {
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
+
+
+
         this.levelCount = 0;
         this.spawnInterval = 5000;
         this.roundTime = 120000;
         this.repeatCount = this.roundTime / this.spawnInterval;
         this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
+
+        let smallConfig = {
+            fontFamily: 'UbuntuMono',
+            fontSize: '30px',
+            color: '#FACADE',
+            align: 'left',
+            fixedWidth: 0,
+        }
         this.text = this.add.text(50, 10, [], smallConfig);
         this.text2 = this.add.text(400, 10, [], smallConfig);
         this.text.setText('Level: ' + this.levelCount);
@@ -471,7 +481,7 @@ class Play extends Phaser.Scene {
         }
 
         this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused);
-        this.text2.setText('Moeny: ' + p1player.money)
+        this.text2.setText('Money: ' + p1player.money)
 
 
         gametime = time;
