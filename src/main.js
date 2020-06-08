@@ -1,7 +1,7 @@
 
 
-let gamewidth =  800;
-let gameheight =  600;
+let gamewidth =  1280;
+let gameheight =  960;
 
 let config = {
     type: Phaser.WEBGL,
@@ -53,7 +53,7 @@ let acceleration = 1500;
 
 //gun attributes
 let LaserDamage = 1;
-let FireRate = 1000;
+let FireRate = 750;
 
 //chasers
 let chaserSpeed = 1;
