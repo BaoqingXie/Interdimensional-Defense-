@@ -77,14 +77,6 @@ class Menu extends Phaser.Scene {
         });
 
         this.menubg = this.add.tileSprite(0, 0, 1280, 960, 'menubg').setOrigin(0, 0);
-        // bgm
-        // if (!this.BGMisPlaying) {
-        //     this.menubgm = this.sound.add('menubgm');
-        //     this.menubgm.loop = true;
-        //     this.menubgm.volume = 0.7;
-        //     this.menubgm.play();
-        //     this.BGMisPlaying = true;
-        // }
 
 
     }
