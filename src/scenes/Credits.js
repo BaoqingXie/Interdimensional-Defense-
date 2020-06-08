@@ -64,7 +64,7 @@ class Credits extends Phaser.Scene {
 
         this.input.on('gameobjectdown', (pointer, gameObject, event) => {
             this.sound.play('Selection', { volume: 0.25 });
-            this.scene.start("menuScene");
+            this.scene.switch("menuScene");
         });
 
 
