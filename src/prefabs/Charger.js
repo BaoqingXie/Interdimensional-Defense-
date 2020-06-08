@@ -10,31 +10,33 @@ class Charger extends Phaser.GameObjects.Sprite {
         this.speed = chargerSpeed;
         this.hp = 3;
         this.attacking = false;
+        
+        this.setOrigin(0.5, 1);
          
         if(this.dimension == 1){ // set animation keys depending on the dimension this belongs to
-            this.defAnimKey = 'charger1';
-            this.hidAnimKey = 'h-charger1';
+            this.defAnimKey = 'charger3';
+            this.hidAnimKey = 'h-charger3';
         }
         if(this.dimension == 2){
             this.defAnimKey = 'charger2';
             this.hidAnimKey = 'h-charger2';
         }
-        if(this.dimension == 3){
-            this.defAnimKey = 'charger3';
-            this.hidAnimKey = 'h-charger3';
-        }
+        // if(this.dimension == 3){
+        //     this.defAnimKey = 'charger3';
+        //     this.hidAnimKey = 'h-charger3';
+        // }
 
         if(this.dimension == dimensionManager.getdimension()){
             this.play(this.defAnimKey); // play regular animation
         }else{
             this.play(this.hidAnimKey); // play the hidden animation
-            this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
+            this.alpha = 0.66; // lower alpha to make it more clear they are invulnerable
         }
     }
 
     update() {
             // chargers run straight downwards (towards the wall)
-        if(this.y < 400) {// WHATEVER PIXEL THE WALL IS AT
+        if(this.y < 415) {// WHATEVER PIXEL THE WALL IS AT
             this.y += this.speed;
         }
         else{ 
@@ -59,7 +61,7 @@ class Charger extends Phaser.GameObjects.Sprite {
                 this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
-                this.alpha = 0.7;
+                this.alpha = 0.66;
             }
         }
     }

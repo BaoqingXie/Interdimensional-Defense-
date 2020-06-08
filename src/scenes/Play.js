@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         this.load.atlas('ID-spritesheet', './assets/InterdimensionalDefense.png', './assets/InterdimensionalDefense.json');
+        this.load.atlas('wall-atlas', './assets/wall.png', './assets/wall.json');
 
         this.load.image('Player', './assets/Sprites/player1-0.png');
         this.load.image('charger2', './assets/Sprites/charger2-0.png');
@@ -18,16 +19,16 @@ class Play extends Phaser.Scene {
         this.load.image('Speed', './assets/Sprites/Speed.png');
         this.load.image('ShopInterface', './assets/Sprites/ShopInterface.png');
 
-        this.load.image('bg1', './assets/Backgrounds/tempbg1.png');
-        this.load.image('bg2', './assets/Backgrounds/DimensionSky.png');
-        this.load.image('bg3', './assets/Backgrounds/DimensionEarth.png');
-        //this.load.image('background', './assets/backgrounds/grey.png');
+        this.load.image('bg1', './assets/Backgrounds/DimensionRed.png');
+        this.load.image('bg2', './assets/Backgrounds/DimensionGreen.png');
 
         this.load.audio('laser_sound', './assets/SoundEffects/Laser.mp3');
         this.load.audio('dimension_shift', './assets/SoundEffects/DimensionShift.mp3');
+
         this.load.audio('BulletHit', './assets/SoundEffects/BulletHit.mp3');
         this.load.audio('ChargerDead', './assets/SoundEffects/ChargerDead.wav');
         this.load.audio('ChaserDead', './assets/SoundEffects/ChaserDead.wav');
+        this.load.audio('BGM', './assets/SoundEffects/bgm.ogg');
 
         // load animation/sprite atlas
         this.load.atlas('Add', './assets/Sprites/AddCombine.png', './assets/Sprites/AddCombine.json')
@@ -38,7 +39,6 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-
 
         //UI
         this.isShopOpen = 0;
@@ -145,6 +145,28 @@ class Play extends Phaser.Scene {
         Chargerparticle = this.add.particles('explode2');
         Chargerparticle.setDepth(2);
 
+
+
+        //play and loop BGM
+        /*const BGM = this.sound.add('BGM', {
+            volume: 0.4,
+            loop: true
+        });
+        sound.play();*/
+
+        this.sound.play('BGM', { volume: 0.4, loop : true});
+
+        this.anims.create({
+            key: 'wall-anim',
+            frames: this.anims.generateFrameNames('wall-atlas', {
+                start: 1,
+                end: 5,
+                zeroPad: 1,
+                prefix: 'wall-',
+            }),
+            frameRate: 6,
+            repeat: 0
+        });
 
         //create anims using the texture atlas
         this.anims.create({
@@ -307,7 +329,11 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
-        dimensionManager = new Dimension(this, 0, 0, 'bg3').setScale(1, 1).setOrigin(0, 0);
+
+        dimensionManager = new Dimension(this,0,0,'bg1').setScale(1,1).setOrigin(0.5,0.5);
+        this.wall = new Wall(this, 0, 415, 'wall-atlas', 'wall-1').setOrigin(0,0).setScale(1.07, 0.8);
+        wallhealth = new HealthBar(this, gamewidth/2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
+        
 
         p1Bullets = this.physics.add.group({ classType: Laser, runChildUpdate: true });
 
@@ -316,12 +342,14 @@ class Play extends Phaser.Scene {
 
         //healthbar_constructor(scene, x, y, width, height, maxhp, color_healthy, color_hurt, color_bg, color_border)
         health = new HealthBar(this, 50, 20, 50, 16, 100, 0x00ff00, 0xff0000, 0xffffff, 0x000000);
+
         wallhealth = new HealthBar(this, gamewidth / 2 - 150, 450, 300, 16, 300, 0x40a0ff, 0xff0000, 0xffffff, 0x000000);
         lastFired = 0;
-
-        key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-        key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
-        key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+      
+        keyspace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        // key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        // key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        // key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
         this.timescores = 0;
 
@@ -336,7 +364,7 @@ class Play extends Phaser.Scene {
 
         //this.badguy1 = new Chaser(this, 100, 50, 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
         //this.badguy2 = new Charger(this, gamewidth / 2 + 100, 50, 'charger2', 0, 2).setOrigin(0.5, 0.5); //  spawn a charger in dimension 2 (charge the wall)
-
+        
         this.badguy1 = this.physics.add.group({ runChildUpdate: true });
         this.badguy2 = this.physics.add.group({ runChildUpdate: true });
 
@@ -398,6 +426,8 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
+        
+        //console.log(this.wall);
 
     }
 
@@ -412,7 +442,11 @@ class Play extends Phaser.Scene {
         health.x = p1player.x - 23;
         health.y = p1player.y + 30;
         health.draw();
-        //wallhealth.draw();
+        
+        wallhealth.x = 170;
+        wallhealth.y = 450;
+        wallhealth.draw();
+    
 
         this.constrainVelocity(p1player, maxSpeed);
         this.constrainReticle(r1reticle, 600, p1player);
@@ -425,12 +459,16 @@ class Play extends Phaser.Scene {
             //change the badguy sprites
 
             let children1 = this.badguy1.getChildren();
+
             for (var c = 0; c < children1.length; c++) {
+
                 children1[c].changeSprite();
             }
 
             let children2 = this.badguy2.getChildren();
+
             for (var c = 0; c < children2.length; c++) {
+
                 children2[c].changeSprite();
             }
 
@@ -443,6 +481,7 @@ class Play extends Phaser.Scene {
 
         this.text.setText('Level: ' + this.levelCount + ' is paused' + this.levelTimeEvent.paused);
         this.text2.setText('Moeny: ' + p1player.money)
+
 
         gametime = time;
 
@@ -463,10 +502,12 @@ class Play extends Phaser.Scene {
     enemyHitCallback(enemyHit, bulletHit) {
         // Reduce hp of enemy
         if (enemyHit.dimension == dimensionManager.getdimension() && bulletHit.active === true && enemyHit.active === true) {
+
             enemyHit.hp = enemyHit.hp - LaserDamage;
 
             console.log("Enemy hp: ", enemyHit.hp);
             this.sound.play('BulletHit', { volume: 0.3 });
+
 
             // Kill enemy if hp <= 0
             if (enemyHit.hp <= 0) {
@@ -520,7 +561,7 @@ class Play extends Phaser.Scene {
 
     playerHitCallback(playerHit, enemyHit) {
         // Reduce health of player
-        if (enemyHit.active === true && playerHit.active === true) {
+        if (enemyHit.active === true && playerHit.active === true && enemyHit.dimension === dimensionManager.getdimension()) {
             playerHit.Hpchange(-5);
             health.decrease(5);
 
@@ -587,8 +628,8 @@ class Play extends Phaser.Scene {
     adjustCamera(sprite1, sprite2) {
         var avgX = ((sprite1.x + sprite2.x) / 2) - 400;
         var avgY = ((sprite1.y + sprite2.y) / 2) - 300;
-        console.log(avgX);
-        console.log(avgY);
+        //console.log(avgX);
+        //console.log(avgY);
         this.cameras.main.scrollX = avgX;
         this.cameras.main.scrollY = avgY;
     }
@@ -600,9 +641,11 @@ class Play extends Phaser.Scene {
         this.repeatCount *= 2;
     }
 
-    spawnEnemy() {
-        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'charger2', 0, 2).setOrigin(0.5, 0.5);
-        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(0, -100), 'chaser3', 0, 3).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+
+    spawnEnemy(){
+        let charger = new Charger(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'charger2', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 1); 
+        let chaser = new Chaser(this, this.getRandomArbitrary(0, 800), this.getRandomArbitrary(-100, 0), 'chaser3', 0, Math.ceil(Math.random() * 2)).setOrigin(0.5, 0.5); // spawn a chaser in dimension 3 (chase player)
+
 
         this.badguy1.add(charger);
         this.badguy2.add(chaser);

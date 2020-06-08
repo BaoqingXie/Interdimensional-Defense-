@@ -10,18 +10,20 @@ class Chaser extends Phaser.GameObjects.Sprite {
         this.speed = chaserSpeed;
         this.hp = 3;
 
+        this.setOrigin(0.5, 0.5)
+
         if(this.dimension == 1){ // set animation keys depending on the dimension this belongs to
-            this.defAnimKey = 'chaser1';
-            this.hidAnimKey = 'h-chaser1';
+            this.defAnimKey = 'chaser3';
+            this.hidAnimKey = 'h-chaser3';
         }
         if(this.dimension == 2){
             this.defAnimKey = 'chaser2';
             this.hidAnimKey = 'h-chaser2';
         }
-        if(this.dimension == 3){
-            this.defAnimKey = 'chaser3';
-            this.hidAnimKey = 'h-chaser3';
-        }
+        // if(this.dimension == 3){
+        //     this.defAnimKey = 'chaser3';
+        //     this.hidAnimKey = 'h-chaser3';
+        // }
 
         if(this.dimension == dimensionManager.getdimension()){
             this.play(this.defAnimKey); // play regular animation
@@ -55,7 +57,7 @@ class Chaser extends Phaser.GameObjects.Sprite {
                 this.alpha = 1;
             }else{
                 this.play(this.hidAnimKey); // play the hidden animation
-                this.alpha = 0.7; // lower alpha to make it more clear they are invulnerable
+                this.alpha = 0.66; // lower alpha to make it more clear they are invulnerable
             }
         }
     }
