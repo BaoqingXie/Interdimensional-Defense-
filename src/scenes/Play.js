@@ -453,6 +453,7 @@ class Play extends Phaser.Scene {
         // update dimension
         if (dimensionManager.update()) {  //dimension.update returns true when 1, 2, or 3 is pressed
             this.sound.play('dimension_shift', { volume: 0.4 });
+            this.cameras.main.shake(50,0.004);
             dimensionManager.setTexture(dimensionManager.getfilename()); //updates bg texture to current dimension
 
             //change the badguy sprites
