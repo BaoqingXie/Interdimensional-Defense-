@@ -372,9 +372,9 @@ class Play extends Phaser.Scene {
         this.levelTimeEvent = this.time.addEvent({ delay: this.roundTime, callback: this.newLevel, callbackScope: this, loop: true, startAt: this.roundTime });
 
         let smallConfig = {
-            fontFamily: 'UbuntuMono',
+            fontFamily: 'Courier New',
             fontSize: '30px',
-            color: '#FACADE',
+            color: '#FFFFFF',
             align: 'left',
             fixedWidth: 0,
         }
