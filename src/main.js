@@ -34,9 +34,7 @@ let health;
 let wallhealth;
 
 let moveKeys;
-let key1;
-let key2;
-let key3;
+let keyspace;
 
 let bulletSpeed = 1;
 

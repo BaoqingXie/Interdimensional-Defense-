@@ -14,17 +14,17 @@ class Charger extends Phaser.GameObjects.Sprite {
         this.setOrigin(0.5, 1);
          
         if(this.dimension == 1){ // set animation keys depending on the dimension this belongs to
-            this.defAnimKey = 'charger1';
-            this.hidAnimKey = 'h-charger1';
+            this.defAnimKey = 'charger3';
+            this.hidAnimKey = 'h-charger3';
         }
         if(this.dimension == 2){
             this.defAnimKey = 'charger2';
             this.hidAnimKey = 'h-charger2';
         }
-        if(this.dimension == 3){
-            this.defAnimKey = 'charger3';
-            this.hidAnimKey = 'h-charger3';
-        }
+        // if(this.dimension == 3){
+        //     this.defAnimKey = 'charger3';
+        //     this.hidAnimKey = 'h-charger3';
+        // }
 
         if(this.dimension == dimensionManager.getdimension()){
             this.play(this.defAnimKey); // play regular animation
