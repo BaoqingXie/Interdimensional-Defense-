@@ -19,7 +19,7 @@ class Menu extends Phaser.Scene {
         game.input.mouse.releasePointerLock();
 
         //play and loop BGM
-        let menubgm = this.sound.add('menubgm', {loop: true });
+        let menubgm = this.sound.add('menubgm', { volume: 0.1, loop: true });
         menubgm.play();
 
         let menuconfig = {
