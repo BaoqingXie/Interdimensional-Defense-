@@ -148,13 +148,7 @@ class Play extends Phaser.Scene {
 
 
         //play and loop BGM
-        /*const BGM = this.sound.add('BGM', {
-            volume: 0.4,
-            loop: true
-        });
-        sound.play();*/
-
-        this.sound.play('BGM', { volume: 0.4, loop : true});
+         this.sound.play('BGM', { volume: 0.4, loop : true});
 
         this.anims.create({
             key: 'wall-anim',
@@ -567,7 +561,10 @@ class Play extends Phaser.Scene {
 
             playerHit.invincibility = true;
             playerHit.alpha = 0.5;
+           
 
+            this.cameras.main.shake(400);
+       
             setTimeout(() => { p1player.reset(); }, 300);
         }
     }
