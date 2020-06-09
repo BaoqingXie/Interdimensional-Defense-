@@ -1,4 +1,8 @@
+/*   INTERDIMENSIONAL DEFENSE
 
+A game by: Alec Zhang, BaoQing Xie, Brad Kim, and JunYao Li
+
+*/
 
 let gamewidth =  1280;
 let gameheight =  960;
