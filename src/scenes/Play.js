@@ -574,11 +574,27 @@ class Play extends Phaser.Scene {
 
         gametime = time;
 
-        if (this.levelTimeEvent.elapsed >= 119900) {
-            this.bgm.pause();
+        if (!this.wave2 && this.levelTimeEvent.elapsed >= 119900) {
+            this.wave2 = true;
+            this.tweens.add({
+                targets:  this.bgm,
+                volume:   0.1,
+                duration: 5000
+            });
+            
+            //this.bgm.pause();
             this.levelTimeEvent.paused = true;
             this.Timeevent.destroy();
-            setTimeout(() => { this.levelTimeEvent.paused = false;this.bgm.resume(); }, 30000);
+            
+            setTimeout(() => { 
+                this.levelTimeEvent.paused = false;
+                //this.bgm.resume(); 
+                this.tweens.add({
+                    targets:  this.bgm,
+                    volume:   1,
+                    duration: 5000
+                });
+            }, 30000);
         }
 
           if(p1player.hp <= 0 || wallhealth.value <=0){
